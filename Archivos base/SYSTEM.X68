@@ -61,8 +61,9 @@ SCRINIT
             
             ; - CLEAR VISIBLE BUFFER
             
+            CLR     D1
             MOVEQ   #11, D0
-            MOVEQ   #$00FF,D1
+            MOVE.W  #$00FF,D1
             TRAP    #15
             
             ; - ENABLE DOUBLE BUFFER
@@ -75,6 +76,10 @@ SCRINIT
             
             ; - CLEAR HIDDEN BUFFER
             
+            CLR     D1                      
+            MOVEQ   #11, D0
+            MOVE.W  #$00FF,D1
+            TRAP    #15
             
             
             ; - INSTALL SCRISR FOR IRQ SCRIRQ (IRQ INTERRUPT VECTOR BEGINS
