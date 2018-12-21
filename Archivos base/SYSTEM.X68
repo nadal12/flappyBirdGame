@@ -50,19 +50,18 @@ SCRINIT
             ; - SET RESOLUTION TO SCRWIDTH X SCRHEIGHT
             
             MOVE.L  #33,D0
-            MOVE.L  #SCRWIDTH*$10000+#SCRHEIGH,D1
+            MOVE.L  #SCRWIDTH*$10000+SCRHEIGH,D1
             TRAP    #15
             
             ; - SET WINDOWED MODE
             
-            MOVEQ   #33, D0
             MOVEQ   #1, D1 
             TRAP    #15
             
             ; - CLEAR VISIBLE BUFFER
             
             MOVEQ   #11, D0
-            MOVE.W  #$00FF,D1
+            MOVE.W  #$FF00,D1
             TRAP    #15
             
             ; - ENABLE DOUBLE BUFFER
@@ -74,7 +73,7 @@ SCRINIT
             ; - CLEAR HIDDEN BUFFER
                                
             MOVEQ   #11, D0
-            MOVE.W  #$00FF,D1
+            MOVE.W  #$FF00,D1
             TRAP    #15
             
             ; - INSTALL SCRISR FOR IRQ SCRIRQ (IRQ INTERRUPT VECTOR BEGINS
@@ -161,23 +160,34 @@ KBDREAD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             ; TO DO: UPDATE KBDVAL AND KBDEDGE
-            
+            MOVEM.L D0-D2/SR,-(A7)
+            ;Activar interrupciones de teclado - no parece ser utilizado en el juego de muestra
             MOVEQ   #62,D0
             MOVE.L  #$0301,D1
             
             TRAP    #15
             
+            ;Obtener estado de teclas
             MOVEQ   #19,D0
             
-            MOVEQ   KBDCHRPK,D1
-            LSL     #8,D1
-            ADD.L   KBDCHRSH,D1
-            LSL     #8,D1
-            ADD.L   KBDCHRMK,D1
-            LSL     #8,D1
-            ADD.L   KBDCHRSP,D1
+            ;Obtener estado de teclas PAUSE - FIRE3 - FIRE2 - FIRE1
+            MOVE.L  #KBDCHRPK<<24+KBDCHRSH<<16+KBDCHRMK<<8+KBDCHRSP,D1
             
             TRAP    #15
+            
+            ;GUARDAR ESTADO DE TECLAS
+            MOVE.L  D1,D2                   
+            
+            ;Obtener estado de teclas DOWN - RIGHT - UP - LEFT
+            MOVE.L  #KBDCHRDN<<24+KBDCHRRT<<16+KBDCHRUP<<8+KBDCHRLF,D1
+
+            TRAP    #15
+          
+            ;Actualizar valores de KBDVAL
+            
+            
+           
+            MOVEM.L (A7)+,D0-D2/SR
             
             RTE
 
@@ -305,6 +315,7 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
+
 
 
 
