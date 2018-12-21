@@ -4,11 +4,11 @@
 
 ;MACROS
 
-DISAINT  MACRO
+ENAINT   MACRO
          ANDI.W #$F8FF,SR
          ENDM
          
-ENAINT   MACRO
+DISAINT  MACRO
          ORI.W #(7<<8)&$700,SR
          ENDM
 
@@ -42,6 +42,7 @@ SCRINIT
             ; - DISABLE INTS (SET INT BITS IN SR TO 111)
             
             DISAINT
+
                         
             ; - INSTALL SCRUPD INTO TRAP SCRTRAP
             
@@ -63,7 +64,7 @@ SCRINIT
             MOVEQ   #11, D0
             MOVE.W  #$FF00,D1
             TRAP    #15
-            
+
             ; - ENABLE DOUBLE BUFFER
             
             MOVEQ   #92, D0
@@ -86,14 +87,14 @@ SCRINIT
             
             MOVEQ   #32,D0
             MOVEQ   #6,D1
-            MOVE.L  #SCRIRQ, D2
+            MOVE.L  #$80+SCRIRQ, D2
             MOVE.L  #SCRTIM, D3
             TRAP #15
             
             ; - CLEAR SCRINTCT AND SCRCYCCT 
             
-            MOVE.B  #0,SCRINTCT
-            MOVE.B  #0,SCRCYCCT
+            CLR.B   (SCRINTCT)
+            CLR.B   (SCRCYCCT)
             
             ; - ENABLE INTS (SET INT BITS IN SR TO 000)
             
@@ -122,13 +123,14 @@ SCRUPD
 ; -----------------------------------------------------------------------------
             ; TO DO: UPDATE DOUBLE BUFFER AND CLEAR HIDDEN BUFFER
             ; - UPDATE DOUBLE BUFFER
+            
             MOVEQ   #94,D0
             TRAP    #15
             
             ; - CLEAR HIDDEN BUFFER
                                
             MOVEQ   #11, D0
-            MOVE.W  #$00FF,D1
+            MOVE.W  #$FF00,D1
             TRAP    #15
             
             RTE
@@ -159,14 +161,9 @@ KBDREAD
 ; OUTPUT   - (KBDVAL) AND (KBDEDGE)
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            ; TO DO: UPDATE KBDVAL AND KBDEDGE
-            MOVEM.L D0-D2/SR,-(A7)
-            ;Activar interrupciones de teclado - no parece ser utilizado en el juego de muestra
-            MOVEQ   #62,D0
-            MOVE.L  #$0301,D1
-            
-            TRAP    #15
-            
+*            ; TO DO: UPDATE KBDVAL AND KBDEDGE
+            MOVEM.L D0-D4,-(A7)
+
             ;Obtener estado de teclas
             MOVEQ   #19,D0
             
@@ -185,10 +182,52 @@ KBDREAD
           
             ;Actualizar valores de KBDVAL
             
+            ;Registro que contendrá KBDVAL.
+            CLR     D3
             
+            ;Registro para seleccionar bit a modificar de D3.
+            CLR     D4
+            
+            ;Número de iteraciones del bucle (.LOOP).
+ 
+.NEXTKEYS   MOVEQ   #3, D0
+
+.LOOP                   
+            BTST    #0, D1
+            BEQ     .NOTPRESSED
+            BSET    D4, D3
+                      
+.NOTPRESSED              
+            
+            ;Se desplaza el registro D1 8 bits a la derecha. 
+            LSR.L   #8, D1
+            
+            ;Se incrementa el índice de D3.
+            ADDQ    #1, D4
+            DBRA    D0, .LOOP
+            
+            ;Comprobar si hay que analizar el segundo conjunto de teclas. 
+            CMP.B   #4, D4
+            BNE     .KEYSREADY            
            
-            MOVEM.L (A7)+,D0-D2/SR
+            ;Se mueve el segundo conjunto de teclas al registro D1 y se
+            ;repite el bucle .LOOP.
+            MOVE.L  D2, D1
+            BRA     .NEXTKEYS
+
+.KEYSREADY  
+            ;Recuperamos el anterior KBDVAL en D4.
+            MOVE.B  (KBDVAL), D4
+            ;Se mueve el byte obtenido a KBDVAL.         
+            MOVE.B  D3, KBDVAL 
+
+            NOT.B   D4
+            AND.B   D4, D3
+            MOVE.B  D3, (KBDEDGE)             
             
+            ;Restaurar registros a su estado original. 
+            MOVEM.L (A7)+,D0-D4
+
             RTE
 
 ; =============================================================================
@@ -315,6 +354,18 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
