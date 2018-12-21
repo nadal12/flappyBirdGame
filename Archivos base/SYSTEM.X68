@@ -9,7 +9,7 @@ DISAINT  MACRO
          ENDM
          
 ENAINT   MACRO
-         ORI.W #(\7<<8)&$700,SR
+         ORI.W #(7<<8)&$700,SR
          ENDM
 
 ; -----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ SCRINIT
             ; - SET RESOLUTION TO SCRWIDTH X SCRHEIGHT
             
             MOVE.L  #33,D0
-            MOVE.L  #SCRWIDTH*$10000+#SCRHEIGHT,D1
+            MOVE.L  #SCRWIDTH*$10000+#SCRHEIGH,D1
             TRAP    #15
             
             ; - SET WINDOWED MODE
@@ -61,50 +61,44 @@ SCRINIT
             
             ; - CLEAR VISIBLE BUFFER
             
-            CLR     D1
             MOVEQ   #11, D0
             MOVE.W  #$00FF,D1
             TRAP    #15
             
             ; - ENABLE DOUBLE BUFFER
             
-            CLR D1
-            CLR D0
-            MOVE    #92, D0
-            MOVE.B  #17, D1     
+            MOVEQ   #92, D0
+            MOVEQ   #17, D1     
             TRAP    #15       
             
             ; - CLEAR HIDDEN BUFFER
-            
-            CLR     D1                      
+                               
             MOVEQ   #11, D0
             MOVE.W  #$00FF,D1
             TRAP    #15
             
-            
             ; - INSTALL SCRISR FOR IRQ SCRIRQ (IRQ INTERRUPT VECTOR BEGINS
             ;   AT $60. INSTALLATION IS SIMILAR TO TRAP INSTALLATION)
             
-            
+            MOVE.L  #SCRISR,($60+4*SCRIRQ)
             
             ; - ENABLE AUTO-IRQ EVERY SCRTIM MS FOR IRQ SCRIRQ (SEE TRAP #15
             ;   TASK 32)
             
-            CLR D1
-            CLR D2
-            CLR D3
-            MOVE #32,D0
-            MOVE.B #06,D1
-            MOVE.B #SCRIRQ, D2
-            MOVE.L #SCRTIM, D3
+            MOVEQ   #32,D0
+            MOVEQ   #6,D1
+            MOVE.L  #SCRIRQ, D2
+            MOVE.L  #SCRTIM, D3
             TRAP #15
             
             ; - CLEAR SCRINTCT AND SCRCYCCT 
             
+            MOVE.B  #0,SCRINTCT
+            MOVE.B  #0,SCRCYCCT
             
             ; - ENABLE INTS (SET INT BITS IN SR TO 000)
             
-            SETINTPR 0
+            ENAINT
             
             RTS
 
@@ -128,6 +122,16 @@ SCRUPD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             ; TO DO: UPDATE DOUBLE BUFFER AND CLEAR HIDDEN BUFFER
+            ; - UPDATE DOUBLE BUFFER
+            MOVEQ   #94,D0
+            TRAP    #15
+            
+            ; - CLEAR HIDDEN BUFFER
+                               
+            MOVEQ   #11, D0
+            MOVE.W  #$00FF,D1
+            TRAP    #15
+            
             RTE
 
 ; =============================================================================
@@ -158,7 +162,22 @@ KBDREAD
 ; -----------------------------------------------------------------------------
             ; TO DO: UPDATE KBDVAL AND KBDEDGE
             
+            MOVEQ   #62,D0
+            MOVE.L  #$0301,D1
             
+            TRAP    #15
+            
+            MOVEQ   #19,D0
+            
+            MOVEQ   KBDCHRPK,D1
+            LSL     #8,D1
+            ADD.L   KBDCHRSH,D1
+            LSL     #8,D1
+            ADD.L   KBDCHRMK,D1
+            LSL     #8,D1
+            ADD.L   KBDCHRSP,D1
+            
+            TRAP    #15
             
             RTE
 
@@ -286,6 +305,9 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
+
+
+
 
 
 
