@@ -43,7 +43,6 @@ SCRINIT
             
             DISAINT
 
-                        
             ; - INSTALL SCRUPD INTO TRAP SCRTRAP
             
             MOVE.L  #SCRUPD,($80+4*SCRTRAP)
@@ -162,6 +161,7 @@ KBDREAD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 *            ; TO DO: UPDATE KBDVAL AND KBDEDGE
+            ;Guardar registros en pila
             MOVEM.L D0-D4,-(A7)
 
             ;Obtener estado de teclas
@@ -181,23 +181,21 @@ KBDREAD
             TRAP    #15
           
             ;Actualizar valores de KBDVAL
+            CLR     D3        ;Registro que contendrá KBDVAL.
+            CLR     D4        ;Registro con índice de bit a modificar de D3.
             
-            ;Registro que contendrá KBDVAL.
-            CLR     D3
             
-            ;Registro para seleccionar bit a modificar de D3.
-            CLR     D4
-            
-            ;Número de iteraciones del bucle (.LOOP).
- 
-.NEXTKEYS   MOVEQ   #3, D0
+            ;Bucle que recorre D1 para obtener estado de teclas.
+.NEXTKEYS   MOVEQ   #3, D0    ;Número de iteraciones del bucle (.LOOP).
 
 .LOOP                   
             BTST    #0, D1
             BEQ     .NOTPRESSED
-            BSET    D4, D3
+            ;If pressed, set corresponding bit
+            BSET    D4, D3                  
                       
 .NOTPRESSED              
+            *En cualquier caso, obtener siguiente byte de D1*
             
             ;Se desplaza el registro D1 8 bits a la derecha. 
             LSR.L   #8, D1
@@ -354,6 +352,7 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
+
 
 
 
