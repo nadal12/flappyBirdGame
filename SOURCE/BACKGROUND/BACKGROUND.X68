@@ -23,7 +23,7 @@ BGUPD
             JSR     AGLADD
 
 .CLOUD      MOVE.B  (SCRCYCCT),D0
-            AND     #$7F,D0                 ; EVERY 128 CYCLES
+            AND     #$FF,D0                 ; EVERY 256 CYCLES
             BNE     .END                    ; CREATE A NEW CLOUD
             LEA     CLDINIT,A1
             LEA     CLDUPD,A2
@@ -80,6 +80,10 @@ BGPLOT
             
             MOVEM.W (A7)+,D1-D4
             RTS
+
+
+
+
 
 
 

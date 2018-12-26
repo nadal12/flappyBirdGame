@@ -3,7 +3,6 @@
 ; LOCAL MEMORY IS:
 ; +0 WORD X COORDINATE
 ; +2 WORD Y COORDINATE
-
 ; =============================================================================
 
 ; -----------------------------------------------------------------------------
@@ -38,6 +37,7 @@ CLDUPD
         MOVE.L      D0,-(A7)
         
         MOVE.W      (XSPEED),D0
+        DIVU.W      #2,D0
         SUB.W       D0,(A0)
         CMP.W       #-CLDSIZE*2,(A0)
         BLE.S       .KILL
@@ -77,6 +77,8 @@ CLDPLOT
         ;Restaurar registros
         MOVEM.L     (A7)+,D0-D4
         RTS
+
+
 
 
 

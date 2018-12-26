@@ -13,6 +13,7 @@ STAGOVR     EQU     2                       ; GAME OVER STATE
 
 CLDTYPE     EQU     1
 GSSDTYPE    EQU     2
+PIPTYPE     EQU     3
 
 ; --- PLAYER RELATED CONSTANTS ------------------------------------------------
 
@@ -58,6 +59,16 @@ BGGNDTP     EQU     BGGSSBT
 GSSDWDTH    EQU     10
 GSSDFC      EQU     $0039DB44
 
+; --- PIPE RELATED CONSTANTS --------------------------------------------------
+
+PIPPC       EQU     $00000000
+PIPFC       EQU     $00196600
+PIPBWDT     EQU     50
+PIPTWDT     EQU     60
+PIPTHGT     EQU     10
+PIPTBSPC    EQU     ((PIPTWDT-PIPBWDT)/2)
+PIPOPEN     EQU     80
+
 ; --- CLOUD RELATED CONSTANTS -------------------------------------------------
 
 CLDSIZE     EQU     60                      ; CLOUD DIAMETER
@@ -69,6 +80,7 @@ CLDFCLR     EQU     $00FFFFFF               ; CLOUD FIL COLOR
 GOVSTRX     EQU     35                      ; TITLE X COORDINATE
 GOVSTRY     EQU     15                      ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
+
 
 
 
