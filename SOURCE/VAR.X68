@@ -18,16 +18,18 @@ PLRDMG      DS.B    1                       ; BIT0: UPD DAMAGE, BIT1 PLOT DMG
             
 ; --- PIPE RELATED VARIABLES --------------------------------------------------
 
-PIPCOUNT    DC.B    0
+PIPCOUNT    DC.B    1
+            DS.W    0
 
 ; --- GAME RELATED VARIABLES --------------------------------------------------
 
-XSPEED      DC.W    5                       ;HORIZONTAL SPEED OF OBJECTS
+XSPEED      DC.W    4                       ;HORIZONTAL SPEED OF OBJECTS
 
 ; --- UTILITY VARIABLES ------------------------------------------------------
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
 
 
 

@@ -87,6 +87,7 @@ STAPLAYU
 ; -----------------------------------------------------------------------------
 *            JSR     PLRUPD
             JSR     BGUPD
+            JSR     PRPUPD
             JSR     SPWUPD
             BRA     AGLUPD
 
@@ -98,6 +99,7 @@ STAPLAYP
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             JSR     BGPLOT
+            JSR     PRPPLOT
             ;JSR     AGLPLOT
             BRA     AGLPLOT
             ;BRA     PLRPLOT
@@ -190,6 +192,7 @@ STAGOVRP
 
 .GOVSTR     DC.B    'GAME  OVER',0
             DS.W    0
+
 
 
 

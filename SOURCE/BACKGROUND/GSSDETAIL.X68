@@ -1,5 +1,5 @@
 ; =============================================================================
-; GRASS DETAILS MANAGEMENT. IT IS AN AGENT.
+; GRASS DETAILS MANAGEMENT. IT IS A PROP.
 ; LOCAL MEMORY IS:
 ; +0 WORD X COORDINATE
 ; =============================================================================
@@ -20,17 +20,19 @@ GSSDINIT
 GSSDUPD
 ; MODIFIES THE LITTLE DETAILS ON THE GRASS' X COORDINATE
 ; -----------------------------------------------------------------------------
+        ;Guardar registros
         MOVE.L      D0,-(A7)
 
         MOVE.W      (XSPEED),D0
-        SUB.W       D0,(A0)
+        SUB.W       D0,(A0)         ;UPDATE X COORDINATE
         CMP.W       #-GSSDWDTH,(A0)
         BLE.S       .KILL
         
-.END    MOVE.L      (A7)+,D0
+.END    ;Restaurar registros
+        MOVE.L      (A7)+,D0
         RTS
 
-.KILL   JSR         AGLKILL
+.KILL   JSR         PRPKILL
         BRA         .END
         
 ; -----------------------------------------------------------------------------
@@ -54,6 +56,9 @@ GSSDPLOT
         MOVEM.L     (A7)+,D0-D4
         RTS
         
+
+
+
 
 
 

@@ -14,6 +14,7 @@
             INCLUDE "CONST.X68"             ; USER CONSTANTS
             INCLUDE "UTIL.X68"              ; UTILITY MACRO AND SUBROUTINES
             INCLUDE "AGENTLST.X68"          ; AGENT LIST MANAGEMENT
+            INCLUDE "PROPLST.X68"          ; PROPS LIST MANAGEMENT
             INCLUDE "SPAWNER.X68"           ; SPAWNER
             INCLUDE "STATES.X68"            ; GAME STATES MANAGEMENT
             INCLUDE "BACKGROUND/BACKGROUND.X68"        ; BACKGROUND MANAGEMENT
@@ -47,6 +48,11 @@ START       JSR     SYSINIT
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
+
+
+
 
 
 

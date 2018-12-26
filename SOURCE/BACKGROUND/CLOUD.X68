@@ -1,5 +1,5 @@
 ; =============================================================================
-; CLOUD MANAGEMENT. IT IS AN AGENT.
+; CLOUD MANAGEMENT. IT IS A PROP.
 ; LOCAL MEMORY IS:
 ; +0 WORD X COORDINATE
 ; +2 WORD Y COORDINATE
@@ -46,7 +46,7 @@ CLDUPD
         MOVE.L      (A7)+,D0
         RTS
         
-.KILL   JSR AGLKILL
+.KILL   JSR PRPKILL
         BRA         .END     
 
 ; -----------------------------------------------------------------------------
@@ -77,6 +77,8 @@ CLDPLOT
         ;Restaurar registros
         MOVEM.L     (A7)+,D0-D4
         RTS
+
+
 
 
 

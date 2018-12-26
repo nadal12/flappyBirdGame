@@ -7,13 +7,14 @@
 STANONE     EQU     -1                      ; PLACEHOLDER TO FORCE CHANGE
 STAINTR     EQU     0                       ; INTRO/PRESS FIRE STATE
 STAPLAY     EQU     1                       ; NORMAL GAME STATE
-STAGOVR     EQU     2                       ; GAME OVER STATE
+STAPAU      EQU     2                       ; PAUSE GAME STATE
+STAGOVR     EQU     3                       ; GAME OVER STATE
 
-; --- AGENT TYPES -------------------------------------------------------------
+; --- AGENT & PROP TYPES -------------------------------------------------------------
 
-CLDTYPE     EQU     1
-GSSDTYPE    EQU     2
-PIPTYPE     EQU     3
+CLDTYPE     EQU     1                       ; NUMBER FOR CLOUD TYPES
+GSSDTYPE    EQU     2                       ; NUMBER FOR GRASS DETAIL TYPES
+PIPTYPE     EQU     3                       ; NUMBER FOR PIPE TYPES
 
 ; --- PLAYER RELATED CONSTANTS ------------------------------------------------
 
@@ -47,27 +48,28 @@ INTPRSF     EQU     $031A0001               ; PRESS FIRE FONT
 
 ; --- BACKGROUND RELATED CONSTANTS --------------------------------------------
 
-BGSKYPC     EQU     $00000000
-BGSKYFC     EQU     $00EFCE87
-BGGSSPC     EQU     $00000000
-BGGSSFC     EQU     $0000990A
-BGGSSTP     EQU     SCRHEIGH*3/4
-BGGSSBT     EQU     BGGSSTP+40
-BGGNDPC     EQU     $00000000
-BGGNDFC     EQU     $00155DD8
-BGGNDTP     EQU     BGGSSBT
-GSSDWDTH    EQU     10
-GSSDFC      EQU     $0039DB44
+BGSKYPC     EQU     $00000000               ; BACKGROUND SKY PEN COLOUR
+BGSKYFC     EQU     $00EFCE87               ; BACKGROUND SKY FILL COLOUR
+BGGSSPC     EQU     $00000000               ; BACKGROUND GRASS PEN COLOUR
+BGGSSFC     EQU     $0000990A               ; BACKGROUND GRASS FILL COLOUR
+BGGSSTP     EQU     SCRHEIGH*3/4            ; GRASS TOP EDGE (Y) COORDINATE
+BGGSSBT     EQU     BGGSSTP+40              ; GRASS BOTTOM EDGE (Y) COORDINATE
+GSSDWDTH    EQU     10                      ; GRASS DETAIL WIDTH
+GSSDFC      EQU     $0039DB44               ; BACKGROUND GRASS DETAIL F.COLOUR
+BGGNDPC     EQU     $00000000               ; BACKGROUND GROUND PEN COLOUR
+BGGNDFC     EQU     $00155DD8               ; BACKGROUND GROUND FILL COLOUR
+BGGNDTP     EQU     BGGSSBT                 ; GROUND TOP EDGE (Y) COORDINATE
 
 ; --- PIPE RELATED CONSTANTS --------------------------------------------------
 
-PIPPC       EQU     $00000000
-PIPFC       EQU     $00196600
-PIPBWDT     EQU     50
-PIPTWDT     EQU     60
-PIPTHGT     EQU     10
-PIPTBSPC    EQU     ((PIPTWDT-PIPBWDT)/2)
-PIPOPEN     EQU     80
+PIPPC       EQU     $00000000               ; PIPE PEN COLOUR
+PIPFC       EQU     $00196600               ; PIPE FILL COLOUR
+PIPBWDT     EQU     50                      ; PIPE BASE WIDTH
+PIPTWDT     EQU     60                      ; PIPE MOUTH WIDTH
+PIPTHGT     EQU     10                      ; PIPE MOUTH HEIGHT
+PIPTBSPC    EQU     ((PIPTWDT-PIPBWDT)/2)   ; DIF.BETW. OUTER RAD. & IN. RAD
+PIPOPEN     EQU     80                      ; SPACE BETW. TOP AND BOTTOM PIPES
+PIPYSPD     EQU     2                       ; SPEED @ WHICH PIPES GO UP&DOWN
 
 ; --- CLOUD RELATED CONSTANTS -------------------------------------------------
 
@@ -80,6 +82,10 @@ CLDFCLR     EQU     $00FFFFFF               ; CLOUD FIL COLOR
 GOVSTRX     EQU     35                      ; TITLE X COORDINATE
 GOVSTRY     EQU     15                      ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
+
+
+
+
 
 
 
