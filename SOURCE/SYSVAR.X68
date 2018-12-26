@@ -25,6 +25,8 @@ SCRCYCCT    DS.B    1                       ; CYCLE COUNTER
             ORG     (*+DMMBSIZE-1)&-DMMBSIZE ; ALIGN TO DMMBSIZE
 DMMDATA     DS.B    DMMBSIZE*DMMBNUM        ; DYNAMIC MEMORY ALLOCATION SPACE
             DS.W    0                       ; JUST IN CASE (SIZE IS POW OF TWO)
+
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~0~

@@ -2,16 +2,6 @@
 ; SYSTEM MANAGEMENT (SYSTEM CODE)
 ; =============================================================================
 
-;MACROS
-
-ENAINT   MACRO
-         ANDI.W #$F8FF,SR
-         ENDM
-         
-DISAINT  MACRO
-         ORI.W #(7<<8)&$700,SR
-         ENDM
-
 ; -----------------------------------------------------------------------------
 SYSINIT
 ; INITIALIZES THE SYSTEM
@@ -41,8 +31,8 @@ SCRINIT
             ; TO DO:
             ; - DISABLE INTS (SET INT BITS IN SR TO 111)
             
-            DISAINT
-
+            ORI.W #(7<<8)&$700,SR
+            
             ; - INSTALL SCRUPD INTO TRAP SCRTRAP
             
             MOVE.L  #SCRUPD,($80+4*SCRTRAP)
@@ -63,15 +53,15 @@ SCRINIT
             MOVEQ   #11, D0
             MOVE.W  #$FF00,D1
             TRAP    #15
-
+            
             ; - ENABLE DOUBLE BUFFER
             
             MOVEQ   #92, D0
             MOVEQ   #17, D1     
-            TRAP    #15       
+            TRAP    #15
             
             ; - CLEAR HIDDEN BUFFER
-                               
+            
             MOVEQ   #11, D0
             MOVE.W  #$FF00,D1
             TRAP    #15
@@ -88,16 +78,16 @@ SCRINIT
             MOVEQ   #6,D1
             MOVE.L  #$80+SCRIRQ,D2
             MOVE.L  #SCRTIM, D3
-            TRAP #15
+            TRAP    #15
             
-            ; - CLEAR SCRINTCT AND SCRCYCCT 
+            ; - CLEAR SCRINTCT AND SCRCYCCT
             
             CLR.B   (SCRINTCT)
             CLR.B   (SCRCYCCT)
             
             ; - ENABLE INTS (SET INT BITS IN SR TO 000)
             
-            ENAINT
+            ANDI.W #$F8FF,SR
             
             RTS
 
@@ -160,7 +150,7 @@ KBDREAD
 ; OUTPUT   - (KBDVAL) AND (KBDEDGE)
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-*            ; TO DO: UPDATE KBDVAL AND KBDEDGE
+            ; TO DO: UPDATE KBDVAL AND KBDEDGE
             ;Guardar registros en pila
             MOVEM.L D0-D4,-(A7)
 
@@ -234,7 +224,7 @@ KBDREAD
 ; DMMBSIZE MUST BE POWER OF TWO. A SLOT HAS:
 ; - HEADER - 1 WORD. SPECIFIES THE OWNER (0 MEANS OWNED BY SYSTEM)
 ; - DATA   - DMMBSIZE - 2 BYTES. MAY CONTAIN VARS AND ANY KIND OF DATA RELATED
-;            THE OWNER. IF OWNER==0, DATA IS MEANINGLESS.
+;            THE THE OWNER. IF OWNER==0, DATA IS MEANINGLESS.
 ; =============================================================================
 
 ; -----------------------------------------------------------------------------
@@ -251,7 +241,6 @@ DMMINIT
             ADD.L   #DMMBSIZE,A0
             DBRA.W  D0,.LOOP
             MOVEM.L (A7)+,D0/A0
-            
             RTS
 
 ; -----------------------------------------------------------------------------
@@ -269,7 +258,6 @@ DMMFRLOP    TST.W   (A0)+
 DMMFRCOM    CMP.L   #DMMDATA+DMMBSIZE*DMMBNUM-1,A0
             BLT     DMMFRLOP
             MOVE.L  #0,A0
-            
 DMMFRFND    RTS
 
 ; -----------------------------------------------------------------------------
@@ -286,7 +274,6 @@ DMMNEXT
             ADD.L   #DMMBSIZE,D0
             MOVE.L  D0,A0
             MOVE.L  (A7)+,D0
-            
             BRA     DMMFRCOM
 
 ; -----------------------------------------------------------------------------
@@ -321,7 +308,6 @@ DMMNEXTO
             ADD.L   #DMMBSIZE,D0
             MOVE.L  D0,A0
             MOVE.L  (A7)+,D0
-            
             BRA     DMMFCOM
 
 ; -----------------------------------------------------------------------------
@@ -334,13 +320,11 @@ DMMALLOC
 ; -----------------------------------------------------------------------------
             MOVE.W  D0,-(A7)
             CLR.W   D0
-            
             JSR     DMMFRSTO
             MOVE.W  (A7)+,D0
             CMP.L   #0,A0
             BEQ     .END
             MOVE.W  D0,-2(A0)
-
 .END        RTS
 
 ; -----------------------------------------------------------------------------
@@ -358,31 +342,6 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

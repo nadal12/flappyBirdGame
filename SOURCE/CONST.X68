@@ -12,6 +12,7 @@ STAGOVR     EQU     2                       ; GAME OVER STATE
 ; --- AGENT TYPES -------------------------------------------------------------
 
 CLDTYPE     EQU     1
+GSSDTYPE    EQU     2
 
 ; --- PLAYER RELATED CONSTANTS ------------------------------------------------
 
@@ -32,13 +33,6 @@ PLRPMDMG    EQU     %00000010               ; PLOT DAMAGE MASK
 PLRUBDMG    EQU     0                       ; UPDATE DAMAGE BIT
 PLRPBDMG    EQU     1                       ; PLOT DAMAGE BIT
 
-; --- CLOUD RELATED CONSTANTS -------------------------------------------------
-
-CLDSIZE     EQU     60                      ; CLOUD DIAMETER
-CLDPCLR     EQU     $00FFFFFF               ; CLOUD PEN COLOR
-CLDFCLR     EQU     $00FFFFFF               ; CLOUD FIL COLOR
-CLDSPEEDX   EQU     10                      ; CLOUD HORIZONTAL SPEED
-
 ; --- INTRO STATE RELATED CONSTANTS -------------------------------------------
 
 INTTITX     EQU     1                       ; TITLE X COORDINATE
@@ -52,14 +46,37 @@ INTPRSF     EQU     $031A0001               ; PRESS FIRE FONT
 
 ; --- BACKGROUND RELATED CONSTANTS --------------------------------------------
 
-BGPCLR      EQU     $00000000
-BGFCLR      EQU     $00EFCE87
+BGSKYPC     EQU     $00000000
+BGSKYFC     EQU     $00EFCE87
+BGGSSPC     EQU     $00000000
+BGGSSFC     EQU     $0000990A
+BGGSSTP     EQU     SCRHEIGH*3/4
+BGGSSBT     EQU     BGGSSTP+40
+BGGNDPC     EQU     $00000000
+BGGNDFC     EQU     $00155DD8
+BGGNDTP     EQU     BGGSSBT
+GSSDWDTH    EQU     10
+GSSDFC      EQU     $0039DB44
+
+; --- CLOUD RELATED CONSTANTS -------------------------------------------------
+
+CLDSIZE     EQU     60                      ; CLOUD DIAMETER
+CLDPCLR     EQU     $00FFFFFF               ; CLOUD PEN COLOR
+CLDFCLR     EQU     $00FFFFFF               ; CLOUD FIL COLOR
 
 ; --- GAME OVER STATE RELATED CONSTANTS ---------------------------------------
 
 GOVSTRX     EQU     35                      ; TITLE X COORDINATE
 GOVSTRY     EQU     15                      ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
+
+
+
+
+
+
+
+
 
 *~Font name~Courier New~
 *~Font size~10~

@@ -21,8 +21,6 @@ STAUPD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.L D0/A0,-(A7)
-            MOVEQ   #30,D0     ;RESET THE CYCLE COUNTER
-            TRAP    #15
             CLR.L   D0
             MOVE.W  (STANEXT),D0
             CMP.W   (STACUR),D0
@@ -38,12 +36,9 @@ STAUPD
             MOVE.L  D0,A0
             MOVE.L  .UPDTBL(A0),A0
             JSR     (A0)
-            MOVEQ   #31,D0                 ;GET NUMBER OF CYCLES IN PLOT
-            TRAP    #15
-            MOVE    D1,(CYCLEUPD)          ;SAVE THE RESULT
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAPLAYI,STAEMPTY
+.INITBL     DC.L    STAINTRI,STAEMPTY,STAEMPTY
 .UPDTBL     DC.L    STAINTRU,STAPLAYU,STAGOVRU
 
 ; -----------------------------------------------------------------------------
@@ -54,17 +49,12 @@ STAPLOT
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.L D0/A0,-(A7)
-            MOVEQ   #30,D0                 ;RESET THE CYCLE COUNTER
-            TRAP    #15
             CLR.L   D0
             MOVE.W  (STACUR),D0
             LSL.L   #2,D0
             MOVE.L  D0,A0
             MOVE.L  .PLTTBL(A0),A0
             JSR     (A0)
-            MOVEQ   #31,D0                 ;GET NUMBER OF CYCLES IN PLOT
-            TRAP    #15
-            MOVE    D1,(CYCLEPLT)          ;SAVE THE RESULT
             MOVEM.L (A7)+,D0/A0
             RTS
 .PLTTBL     DC.L    STAINTRP,STAPLAYP,STAGOVRP
@@ -80,7 +70,7 @@ STAEMPTY
             RTS
 
 ; -----------------------------------------------------------------------------
-STAPLAYI    EQU     PLRINIT
+;STAPLAYI    EQU     PLRINIT
 ; PLAY STATE INITIALIZATION.
 ; INPUT    - NONE
 ; OUTPUT   - NONE
@@ -95,7 +85,8 @@ STAPLAYU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            JSR     PLRUPD
+*            JSR     PLRUPD
+            JSR     BGUPD
             JSR     SPWUPD
             BRA     AGLUPD
 
@@ -107,8 +98,9 @@ STAPLAYP
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             JSR     BGPLOT
-            JSR     AGLPLOT
-            BRA     PLRPLOT
+            ;JSR     AGLPLOT
+            BRA     AGLPLOT
+            ;BRA     PLRPLOT
 
 ; -----------------------------------------------------------------------------
 STAINTRI    EQU     DMMINIT
@@ -138,25 +130,33 @@ STAINTRP
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+            ;Guardar registros en pila
             MOVEM.L A1/D0-D1,-(A7)
-            UTLLOCT INTTITX,INTTITY
-            UTLSPEN #INTTITC
-            UTLSFIL #$00000000
-            LEA     .TITSTR,A1
-            MOVE.B  #14,D0
-            TRAP    #15
+            
+            ;Seleccionar fuente de texto
+            UTLFONT INTTITC,INTTITF
+            ;Seleccionar posicion de texto      
+            UTLLOCT INTTITX,INTTITY               
 
-            UTLLOCT INTPRSX,INTPRSY
-            UTLSPEN #INTPRSC
-            UTLSFIL #$00000000
-            LEA     .PRSSTR,A1
+            LEA     .TITLE,A1
             MOVE.B  #14,D0
             TRAP    #15
+            
+            ;Seleccionar fuente de texto
+            UTLFONT INTPRSC,INTPRSF     
+            ;Seleccionar posicion de texto
+            UTLLOCT INTPRSX,INTPRSY     
+
+            LEA     .START_TEXT,A1
+            MOVE.B  #14,D0
+            TRAP    #15
+            
+            ;Restaurar registros
             MOVEM.L (A7)+,A1/D0-D1
             RTS
 
-.TITSTR     DC.B    'VERY DIFFERENT GAME FROM FLAPPY BIRD',0
-.PRSSTR     DC.B    'PUSH SPACE BAR TO START',0
+.TITLE      DC.B    'FLAPPY BIRD',0 
+.START_TEXT DC.B    'PRESS SPACE TO START',0
             DS.W    0
 
 ; -----------------------------------------------------------------------------
@@ -178,7 +178,6 @@ STAGOVRP
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            ;PLOT GAME OVER STRING
             MOVEM.L A1/D0-D1,-(A7)
             UTLLOCT GOVSTRX,GOVSTRY
             UTLSPEN #GOVSTRC
@@ -186,24 +185,18 @@ STAGOVRP
             LEA     .GOVSTR,A1
             MOVE.B  #14,D0
             TRAP    #15
-            ;PLOT SCORE STRING
-            UTLLOCT GOVSTRX,GOVSTRY+2
-            MOVE.B  #14,D0
-            LEA     .SCOSTR,A1
-            TRAP    #15
-            ;PLOT SCORE NUMBER
-            MOVE.W  (PLRSCORE),D1
-            EXT.L   D1
-            MOVE.B  #10,D2
-            MOVE.B  #15,D0
-            TRAP    #15
-            
             MOVEM.L (A7)+,A1/D0-D1
             RTS
 
 .GOVSTR     DC.B    'GAME  OVER',0
-.SCOSTR     DC.B    'SCORE:',0
             DS.W    0
+
+
+
+
+
+
+
 
 
 *~Font name~Courier New~

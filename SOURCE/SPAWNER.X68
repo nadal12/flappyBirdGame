@@ -9,20 +9,25 @@ SPWUPD
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.L  D0/A1-A3,-(A7)
-
-            MOVE.B  (SCRCYCCT),D0
-            AND     #$1F,D0                 ; EVERY 32 CYCLES
-            BNE     .END                    ; CREATE A NEW CLOUD
-            LEA     CLDINIT,A1
-            LEA     CLDUPD,A2
-            LEA     CLDPLOT,A3
-            MOVE.W  #CLDTYPE,D0
-            
-            JSR     AGLADD
-            
-.END        MOVEM.L (A7)+,D0/A1-A3
+*            MOVEM.L  D0/A1-A3,-(A7)
+*
+*            MOVE.B  (SCRCYCCT),D0
+*            AND     #$7F,D0                 ; EVERY 128 CYCLES
+*            BNE     .END                    ; CREATE A NEW CLOUD
+*            LEA     CLDINIT,A1
+*            LEA     CLDUPD,A2
+*            LEA     CLDPLOT,A3
+*            MOVE.W  #CLDTYPE,D0
+*            
+*            JSR     AGLADD
+*            
+*.END        MOVEM.L (A7)+,D0/A1-A3
             RTS
+
+
+
+
+
 
 
 

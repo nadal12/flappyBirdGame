@@ -38,7 +38,7 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAPLAYI,STAEMPTY
+.INITBL     DC.L    STAINTRI,STAEMPTY,STAEMPTY
 .UPDTBL     DC.L    STAINTRU,STAPLAYU,STAGOVRU
 
 ; -----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ STAEMPTY
             RTS
 
 ; -----------------------------------------------------------------------------
-STAPLAYI    EQU     PLRINIT
+;STAPLAYI    EQU     PLRINIT
 ; PLAY STATE INITIALIZATION.
 ; INPUT    - NONE
 ; OUTPUT   - NONE
@@ -85,7 +85,7 @@ STAPLAYU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            JSR     PLRUPD
+*            JSR     PLRUPD
             JSR     SPWUPD
             BRA     AGLUPD
 
@@ -96,8 +96,10 @@ STAPLAYP
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            JSR     AGLPLOT
-            BRA     PLRPLOT
+            JSR     BGPLOT
+            ;JSR     AGLPLOT
+            BRA     AGLPLOT
+            ;BRA     PLRPLOT
 
 ; -----------------------------------------------------------------------------
 STAINTRI    EQU     DMMINIT
@@ -187,6 +189,12 @@ STAGOVRP
 
 .GOVSTR     DC.B    'GAME  OVER',0
             DS.W    0
+
+
+
+
+
+
 
 
 *~Font name~Courier New~

@@ -15,6 +15,7 @@ PLRINIT
             CLR.W   (PIPCOUNT)
             CLR.W   (PLRSCORE)
             CLR.W   (PLRDEAD)
+            RTS
 
 ; -----------------------------------------------------------------------------
 PLRUPD
@@ -116,6 +117,7 @@ PLRPLOT
             MOVEM.L (A7)+,D0-D4
             RTS
 .SCORESTR   DC.B    'SCORE: ',0
+
 
 
 
