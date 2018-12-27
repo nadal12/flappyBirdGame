@@ -23,12 +23,19 @@ PIPCOUNT    DC.B    1
 
 ; --- GAME RELATED VARIABLES --------------------------------------------------
 
-XSPEED      DC.W    4                       ;HORIZONTAL SPEED OF OBJECTS
+XSPEED      DC.W    5                       ;HORIZONTAL SPEED OF OBJECTS
+
+; --- PAUSE MENU RELATED VARIABLES -------------------------------------------
+
+PMOPTN      DC.B    0                       ;OPTION ON THE MENU TO BE CHOSEN
 
 ; --- UTILITY VARIABLES ------------------------------------------------------
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
+
+
 
 
 

@@ -8,17 +8,17 @@
 
 ; --- CODE INCLUDES -----------------------------------------------------------
 
-            INCLUDE "SYSCONST.X68"          ; SYSTEM CONSTANTS
-            INCLUDE "SYSTEM.X68"            ; SYSTEM CODE
-            INCLUDE "SYSCONST.X68"          ; SYSTEM CONSTANTS
-            INCLUDE "CONST.X68"             ; USER CONSTANTS
-            INCLUDE "UTIL.X68"              ; UTILITY MACRO AND SUBROUTINES
-            INCLUDE "AGENTLST.X68"          ; AGENT LIST MANAGEMENT
-            INCLUDE "PROPLST.X68"          ; PROPS LIST MANAGEMENT
-            INCLUDE "SPAWNER.X68"           ; SPAWNER
-            INCLUDE "STATES.X68"            ; GAME STATES MANAGEMENT
-            INCLUDE "BACKGROUND/BACKGROUND.X68"        ; BACKGROUND MANAGEMENT
-            INCLUDE "PIPES.X68"             ; PIPES MANAGEMENT          
+            INCLUDE "SYSCONST.X68"               ; SYSTEM CONSTANTS
+            INCLUDE "SYSTEM.X68"                 ; SYSTEM CODE
+            INCLUDE "SYSCONST.X68"               ; SYSTEM CONSTANTS
+            INCLUDE "CONST.X68"                  ; USER CONSTANTS
+            INCLUDE "UTIL.X68"                   ; UTILITY MACRO AND SUBROUTINES
+            INCLUDE "AGENTLST.X68"               ; AGENT LIST MANAGEMENT
+            INCLUDE "PROPLST.X68"                ; PROPS LIST MANAGEMENT
+            INCLUDE "SPAWNER.X68"                ; SPAWNER
+            INCLUDE "STATES2.X68"                ; GAME STATES MANAGEMENT
+            INCLUDE "BACKGROUND/BACKGROUND.X68"  ; BACKGROUND MANAGEMENT
+            INCLUDE "PIPES.X68"                  ; PIPES MANAGEMENT          
             
 ; --- INITIALIZE --------------------------------------------------------------
 
@@ -48,6 +48,8 @@ START       JSR     SYSINIT
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
 
 
 

@@ -77,11 +77,33 @@ CLDSIZE     EQU     60                      ; CLOUD DIAMETER
 CLDPCLR     EQU     $00FFFFFF               ; CLOUD PEN COLOR
 CLDFCLR     EQU     $00FFFFFF               ; CLOUD FIL COLOR
 
+; --- PAUSE STATE RELATED CONSTANTS ---------------------------------------
+
+CONTNUM     EQU     0                       ; CONTINUE GAME NUMBER
+NEWGNUM     EQU     1                       ; NEW GAME NUMBER
+EXTNUM      EQU     2                       ; EXIT GAME NUMBER
+PAUTITC     EQU     $0000FFFF               ; TITLE COLOUR
+PAUTITF     EQU     $03300001               ; TITLE FONT
+PAUOPTFU    EQU     $01130001               ; OPTION FONT (unselected)
+PAUOPTFS    EQU     $01130005               ; OPTION FONT (selected)
+PAUOPTC     EQU     $00FFFFFF               ; OPTION COLOUR
+PAUTITX     EQU     2                       ; TITLE COORD. X
+PAUTITY     EQU     1                       ; TITLE COORD. Y
+PAUOPTX     EQU     15                      ; OPTIONS COORD. X
+PAUCNTY     EQU     8                       ; CONTINUE OPTION COORD. Y
+PAUNEWY     EQU     10                      ; NEW GAME OPTION COORD. Y
+PAUEXTY     EQU     12                      ; EXIT OPTION COORD. Y
+PAUSELC     EQU     $000000FF               ; SELECTED OPTION COLOUR
+
 ; --- GAME OVER STATE RELATED CONSTANTS ---------------------------------------
 
 GOVSTRX     EQU     35                      ; TITLE X COORDINATE
 GOVSTRY     EQU     15                      ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
+
+
+
+
 
 
 

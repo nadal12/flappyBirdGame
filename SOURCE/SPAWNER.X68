@@ -19,13 +19,13 @@ SPWUPD
             LEA     PIPPLOT,A3
             MOVE.W  #PIPTYPE,D0
             MOVE.B  (PIPCOUNT),D1
-            MOVE.B  (PIPCOUNT),D7
             ADDQ.B  #1,(PIPCOUNT)
             
             JSR     AGLADD
             
 .END        MOVEM.L (A7)+,D0/A1-A3
             RTS
+
 
 
 
