@@ -205,7 +205,7 @@ KBDREAD
 
 .KEYSREADY  
             ;Recuperamos el anterior KBDVAL en D4.
-            MOVE.B  (KBDVAL), D4
+            MOVE.B  (KBDVAL),D4
             ;Se mueve el byte obtenido a KBDVAL.         
             MOVE.B  D3, KBDVAL 
 
@@ -342,6 +342,7 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
+
 
 
 

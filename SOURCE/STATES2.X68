@@ -38,7 +38,7 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAEMPTY,STAEMPTY,STAEMPTY
+.INITBL     DC.L    STAINTRI,STAEMPTY,STAPAUI,STAEMPTY
 .UPDTBL     DC.L    STAINTRU,STAPLAYU,STAPAUU,STAGOVRU
 
 ; -----------------------------------------------------------------------------
@@ -127,8 +127,28 @@ STAINTRU
 ; -----------------------------------------------------------------------------
             BTST.B  #KBDBITF1,(KBDEDGE)
             BEQ     .END
+            BTST.B  #KBDBITLF,(KBDEDGE)
+            BNE.S   .LEFT
+            BTST.B  #KBDBITRT,(KBDEDGE)
+            BNE.S   .RIGHT
+            
             MOVE.W  #STAPLAY,(STANEXT)
+            BRA.S   .END
+
+.LEFT       CMP     #INTOESY,(XSPEED)
+            BGT.S   .LF
+            BRA.S   .END
+.RIGHT      CMP     #INTOHRD,(XSPEED)
+            BLT.S   .RT
+            BRA     .END            
+
 .END        RTS
+
+.LF         SUB.W   #2,(XSPEED)
+            BRA.S   .END
+            
+.RT         ADD.W   #2,(XSPEED)
+            BRA.S   .END
 
 ; -----------------------------------------------------------------------------
 STAINTRP
@@ -164,6 +184,9 @@ STAINTRP
 
 .TITLE      DC.B    'FLAPPY BIRD',0 
 .START_TEXT DC.B    'PRESS SPACE TO START',0
+.DIF_ESY    DC.B    'DIFICULTAD: FÁCIL',0
+.DIF_NRM    DC.B    'DIFICULTAD: NORMAL',0
+.DIF_HRD    DC.B    'DIFICULTAD: DIFICIL',0
             DS.W    0
 
 
@@ -175,11 +198,10 @@ STAPAUI
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            ;Guardar registros de juego
-            MOVEM.L D0-D7/A0-A6,-(A7)
-            MOVE.W  SR,-(A7)
+            ;Guardar estado de juego en registros
+            MOVE.B  (SCRCYCCT),D1
             
-            JMP     -64(A7)
+            RTS
 ; -----------------------------------------------------------------------------
 STAPAUU
 ; INTRO STATE UPDATE
@@ -187,6 +209,9 @@ STAPAUU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+            ;Guardar registros
+            MOVE.L  D0,-(A7)
+
             BTST.B  #KBDBITUP,(KBDEDGE)     ;Check cambio en estado de UP
             BNE.S   .UP
             BTST.B  #KBDBITDN,(KBDEDGE)     ;Check cambio en estado de DOWN
@@ -196,18 +221,22 @@ STAPAUU
             BTST.B  #KBDBITPS,(KBDEDGE)     ;Check cambio en estado de 'P'
             BEQ.S   .END
             
+            MOVE.B  D1,(SCRCYCCT)
             MOVE.W  #STAPLAY,(STANEXT)      ;Si hay cambio en estado de 'P'
                                             ;Actualizar siguiente estado
-.END        RTS
+                                            
+.END        ;Restaurar registros
+            MOVE.L  (A7)+,D0
+            RTS
 
 .UP         CMP.B   #CONTNUM,(PMOPTN)       ;Check si es posible cambiar a una
             BLE.S   .END                    ;opción superior
-            SUBQ    #1,(PMOPTN)
+            SUBQ.B   #1,(PMOPTN)
             BRA.S   .END
             
 .DN         CMP.B   #EXTNUM,(PMOPTN)        ;Check si es posible cambiar a una
             BGE.S   .END                    ;opción inferior
-            ADDQ    #1,(PMOPTN)
+            ADDQ.B   #1,(PMOPTN)
             BRA.S   .END
             
 .OK         
@@ -219,21 +248,38 @@ STAPAUU
             
             JMP     .JMPLST(A0)
             
-.JMPLST     JMP     .contgame               
-            JMP     .newgame
-            JMP     .exitgame
-.contgame
+.JMPLST     JMP     .CONTGAME               ;Continuar juego seleccionado
+            JMP     .NEWGAME                ;Nuevo juego seleccionado
+            JMP     .TOGLSD                 ;Toggle sound
+            JMP     .EXITGAME               ;Salir seleccionado
+            
+.CONTGAME
             ;Si última PMOPT == continuar juego, actualizar estado
             MOVE.W  #STAPLAY,(STANEXT)
+            MOVE.B  D1,(SCRCYCCT)       ;Recupera el frame count previo a pausa
             BRA     .END
-.newgame    
+            
+.NEWGAME    
             ;Si última PMOPT == nuevo juego, actualizar estado
+            JSR     GMRSET
             MOVE.W  #STAINTR,(STANEXT)
             BRA     .END
             
-.exitgame   
+.TOGLSD     ;Si última PMOPT == Sonido on/off, cambiar estado de sonido
+            TST.B   (SNDSTA)            ;IF (SNDSTA) == 0 -> SOUND IS ON
+            BEQ.S   .turnoff
+            
+            MOVE.B #SOUNDON,(SNDSTA)
+            BRA     .END
+.turnoff
+            MOVE.B #SOUNDOFF,(SNDSTA)
+            BRA     .END  
+          
+.EXITGAME   
             ;Si última PMOPT == salir de juego, actualizar estado
+            JSR     GMRSET
             MOVE.W  #STAGOVR,(STANEXT)
+            
             BRA     .END
 
 ; -----------------------------------------------------------------------------
@@ -257,9 +303,6 @@ STAPAUP
             LEA     .TITLE,A1
             MOVEQ   #14,D0
             TRAP    #15
-            
-            MOVE.B  (PMOPTN),D7
-            
             
             **********DIBUJAR OPCION CONTINUAR**********
             ;Seleccionar fuente de texto
@@ -293,6 +336,29 @@ STAPAUP
             MOVEQ   #14,D0
             TRAP    #15
             
+            **********DIBUJAR OPCIÓN DE TOGGLE SOUND**********
+            ;Seleccionar fuente de texto
+            CMP.B   #TGLSNUM,(PMOPTN)
+            BEQ.S   .SDSEL
+            UTLFONT PAUOPTC,PAUOPTFU
+            BRA.S   .SKPSD
+
+.SDSEL      UTLFONT PAUOPTC,PAUOPTFS
+.SKPSD
+            ;Seleccionar posición de texto
+            UTLLOCT PAUOPTX,PAUSDY
+            
+            TST.B   (SNDSTA)
+            BEQ.S   .on
+            
+            LEA     .SDOFF,A1
+            BRA     .trap
+            
+.on         LEA     .SDON,A1
+
+.trap       MOVEQ   #14,D0
+            TRAP    #15
+            
             **********DIBUJAR OPCION SALIR**********
             ;Seleccionar fuente de texto
             CMP.B   #EXTNUM,(PMOPTN)
@@ -309,6 +375,22 @@ STAPAUP
             MOVEQ   #14,D0
             TRAP    #15
             
+            **********DIBUJAR TEXTO DE AYUDA**********
+            ;Seleccionar fuente de texto
+            UTLFONT PAUOPTC,PAUHLPF
+            ;Seleccionar posición de texto
+            UTLLOCT PAUHLPX,PAUHLPY1
+            
+            LEA     .HLP1,A1
+            MOVEQ   #14,D0
+            TRAP    #15
+            
+            UTLLOCT PAUHLPX,PAUHLPY2
+            
+            LEA     .HLP2,A1
+            MOVEQ   #14,D0
+            TRAP    #15
+            
             ;Restaurar registros
             MOVEM.L (A7)+,D0/A1
             RTS
@@ -317,7 +399,11 @@ STAPAUP
 .TITLE      DC.B    'MENU DE PAUSA',0
 .CONT       DC.B    'CONTINUAR',0
 .NEWG       DC.B    'JUEGO NUEVO',0
+.SDON       DC.B    'SONIDO: ON',0
+.SDOFF      DC.B    'SONIDO: OFF',0
 .EXIT       DC.B    'SALIR',0
+.HLP1       DC.B    'Presione UP o DOWN para moverse por el menú',0
+.HLP2       DC.B    'Presione SPACE para seleccionar',0
             DS.W    0
             
 ; -----------------------------------------------------------------------------
@@ -328,6 +414,7 @@ STAGOVRU
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             BTST.B  #KBDBITF1,(KBDEDGE)
+            MOVE.B  (KBDEDGE),D7
             BEQ     .END
             MOVE.W  #STAINTR,(STANEXT)
 .END        RTS
@@ -341,8 +428,8 @@ STAGOVRP
 ; -----------------------------------------------------------------------------
             MOVEM.L A1/D0-D1,-(A7)
             UTLLOCT GOVSTRX,GOVSTRY
-            UTLSPEN #GOVSTRC
-            UTLSFIL #$00000000
+            UTLFONT GOVSTRC,GOVSTRF
+*            UTLSFIL #$00000000
             LEA     .GOVSTR,A1
             MOVE.B  #14,D0
             TRAP    #15
@@ -351,6 +438,31 @@ STAGOVRP
 
 .GOVSTR     DC.B    'GAME  OVER',0
             DS.W    0
+
+
+; -----------------------------------------------------------------------------
+GMRSET
+; RESET GAME VARIABLES TO THEIR INITIAL STATE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - GAME VARIABLES (@ VAR.X68 & SOME OF SYSVAR.X68) 
+; -----------------------------------------------------------------------------
+            CLR.B   (SCRCYCCT)
+            CLR.B   (PMOPTN)
+            MOVE.B #1,(PIPCOUNT)
+            MOVE.W #5,(XSPEED)
+            CLR.B   (UTLRNDIX)
+            CLR.W   (PLRPOSX)
+            CLR.W   (PLRPOSY)
+            CLR.W   (PLRSCORE)
+            RTS   
+
+
+
+
+
+
+
 
 
 

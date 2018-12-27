@@ -10,7 +10,13 @@ STAPLAY     EQU     1                       ; NORMAL GAME STATE
 STAPAU      EQU     2                       ; PAUSE GAME STATE
 STAGOVR     EQU     3                       ; GAME OVER STATE
 
-; --- AGENT & PROP TYPES -------------------------------------------------------------
+; --- GAME STATES -------------------------------------------------------------
+
+*DO NOT CHANGE THE VALUE OF SOUNDON ($00)*
+SOUNDON     EQU     $00                     ; VALUE OF SNDSTA WHEN SOUND IS ON
+SOUNDOFF    EQU     $FF                     ; VALUE OF SNDSTA WHEN SOUND IS OFF
+
+; --- AGENT & PROP TYPES ------------------------------------------------------
 
 CLDTYPE     EQU     1                       ; NUMBER FOR CLOUD TYPES
 GSSDTYPE    EQU     2                       ; NUMBER FOR GRASS DETAIL TYPES
@@ -45,6 +51,10 @@ INTPRSX     EQU     5                       ; PRESS FIRE X COORDINATE
 INTPRSY     EQU     8                       ; PRESS FIRE Y COORDINATE
 INTPRSC     EQU     $00000080               ; PRESS FIRE COLOR
 INTPRSF     EQU     $031A0001               ; PRESS FIRE FONT
+INTOESY     EQU     3                       ; DIFFICULTY LEVEL: EASY
+INTONRM     EQU     5                       ; DIFFICULTY LEVEL: NORMAL
+INTOHRD     EQU     7                       ; DIFFICULTY LEVEL: HARD
+INTDSTC     EQU     $00FFFFFF
 
 ; --- BACKGROUND RELATED CONSTANTS --------------------------------------------
 
@@ -81,7 +91,8 @@ CLDFCLR     EQU     $00FFFFFF               ; CLOUD FIL COLOR
 
 CONTNUM     EQU     0                       ; CONTINUE GAME NUMBER
 NEWGNUM     EQU     1                       ; NEW GAME NUMBER
-EXTNUM      EQU     2                       ; EXIT GAME NUMBER
+TGLSNUM     EQU     2                       ; TOGGLE SOUND NUMBER
+EXTNUM      EQU     3                       ; EXIT GAME NUMBER
 PAUTITC     EQU     $0000FFFF               ; TITLE COLOUR
 PAUTITF     EQU     $03300001               ; TITLE FONT
 PAUOPTFU    EQU     $01130001               ; OPTION FONT (unselected)
@@ -89,17 +100,29 @@ PAUOPTFS    EQU     $01130005               ; OPTION FONT (selected)
 PAUOPTC     EQU     $00FFFFFF               ; OPTION COLOUR
 PAUTITX     EQU     2                       ; TITLE COORD. X
 PAUTITY     EQU     1                       ; TITLE COORD. Y
-PAUOPTX     EQU     15                      ; OPTIONS COORD. X
+PAUOPTX     EQU     12                      ; OPTIONS COORD. X
 PAUCNTY     EQU     8                       ; CONTINUE OPTION COORD. Y
-PAUNEWY     EQU     10                      ; NEW GAME OPTION COORD. Y
-PAUEXTY     EQU     12                      ; EXIT OPTION COORD. Y
-PAUSELC     EQU     $000000FF               ; SELECTED OPTION COLOUR
-
+PAUNEWY     EQU     9                       ; NEW GAME OPTION COORD. Y
+PAUSDY      EQU     10                      ; TOGGLE SOUND OPTION COORD. Y
+PAUEXTY     EQU     11                      ; EXIT OPTION COORD. Y
+PAUHLPF     EQU     $01090000               ; HELP TEXT FONT
+PAUHLPX     EQU     8                       ; HELP TEXT X COORD.
+PAUHLPY1    EQU     28                      ; HELP TEXT 1 Y COORD.
+PAUHLPY2    EQU     29                      ; HELP TEXT 2 Y COORD.
 ; --- GAME OVER STATE RELATED CONSTANTS ---------------------------------------
 
-GOVSTRX     EQU     35                      ; TITLE X COORDINATE
-GOVSTRY     EQU     15                      ; TITLE Y COORDINATE
+GOVSTRX     EQU     13                      ; TITLE X COORDINATE
+GOVSTRY     EQU     6                       ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
+GOVSTRF     EQU     $01130001               ; TITLE FONT
+
+
+
+
+
+
+
+
 
 
 
