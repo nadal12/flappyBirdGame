@@ -11,7 +11,7 @@ START_TEXT DC.B 'PRESS SPACE OR ENTER TO START',0
 
 START:
 
-;Ajustar resoluciÃ³n de la ventana (1024x768)
+;Ajustar resolución de la ventana (1024x768)
 
      MOVE.B #33,D0
      MOVE.L #1024*$10000+768,D1       
@@ -34,7 +34,7 @@ PRINT_ENTER_TO_START
         MOVE.B  #21,d0
         TRAP    #15
 
-;Definir posiciÃ³n 
+;Definir posición 
 
         MOVE.B #11, D0
         MOVE.W #$050D, D1
@@ -56,8 +56,24 @@ PRINT_TITLE
         MOVE.B  #21,d0
         TRAP    #15
         
-;Definir posiciÃ³n 
+;Definir posición 
 
         MOVE.B #11, D0
         MOVE.W #$0501, D1
         TRAP #15
+
+;Imprimir texto. 
+       MOVE.B #14, D0
+       LEA TITLE, A1
+       TRAP #15
+       
+       RTS
+       
+END
+
+    SIMHALT           
+    END    START
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~0~
+*~Tab size~4~
