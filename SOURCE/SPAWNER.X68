@@ -12,7 +12,7 @@ SPWUPD
             MOVEM.L  D0/A1-A3,-(A7)
 
             MOVE.B  (SCRCYCCT),D0
-            AND     #$3F,D0                 ; EVERY 64 CYCLES
+            AND.B   (PIPCYC),D0             ; EVERY PIPCYC CYCLES
             BNE     .END                    ; CREATE A NEW PIPE
             LEA     PIPINIT,A1
             LEA     PIPUPD,A2
@@ -25,6 +25,8 @@ SPWUPD
             
 .END        MOVEM.L (A7)+,D0/A1-A3
             RTS
+
+
 
 
 

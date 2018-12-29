@@ -12,6 +12,7 @@
             INCLUDE "SYSTEM.X68"                 ; SYSTEM CODE
             INCLUDE "SYSCONST.X68"               ; SYSTEM CONSTANTS
             INCLUDE "CONST.X68"                  ; USER CONSTANTS
+            INCLUDE "SOUND.X68"                  ; SOUND MANAGEMENT
             INCLUDE "UTIL.X68"                   ; UTILITY MACRO AND SUBROUTINES
             INCLUDE "AGENTLST.X68"               ; AGENT LIST MANAGEMENT
             INCLUDE "PROPLST.X68"                ; PROPS LIST MANAGEMENT
@@ -48,6 +49,8 @@ START       JSR     SYSINIT
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
 
 
 

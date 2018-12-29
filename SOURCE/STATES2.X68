@@ -38,7 +38,7 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAEMPTY,STAPAUI,STAEMPTY
+.INITBL     DC.L    STAINTRI,STAPLAYI,STAPAUI,STAEMPTY
 .UPDTBL     DC.L    STAINTRU,STAPLAYU,STAPAUU,STAGOVRU
 
 ; -----------------------------------------------------------------------------
@@ -70,14 +70,35 @@ STAEMPTY
             RTS
 
 ; -----------------------------------------------------------------------------
-;STAPLAYI    EQU     PLRINIT
+STAPLAYI
 ; PLAY STATE INITIALIZATION.
+; SETS THE RIGHT CYCLE CO
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
-; NOTE     - JUST A WRAPPER FOR PLRINIT
 ; -----------------------------------------------------------------------------
-
+            ;Guardar registros
+            MOVE.L  D0,-(A7)
+            
+            MOVE.W  (XSPEED),D0         ; CHECK DIFFICULTY CHOSEN TO ADAPT
+            CMP.W   #INTOESY,D0         ; BRANCH IF CHOSEN EASY MODE
+            BEQ.S   .EASY
+            CMP.W   #INTOHRD,D0         ; BRANCH IF CHOSEN HARD MODE
+            BEQ.S   .HARD
+            
+            MOVE.B  #GPIPCNRM,(PIPCYC)  ; NORMAL MODE SELECTED
+            
+.END        ;JSR     PLRINIT
+            
+            ;Restaurar registros
+            MOVE.L  (A7)+,D0
+            RTS
+.EASY   
+            MOVE.B  #GPIPCESY,(PIPCYC)  ; EASY MODE SELECTED
+            BRA.S   .END
+.HARD
+            MOVE.B  #GPIPCHRD,(PIPCYC)  ; HARD MODE SELECTED
+            BRA.S   .END
 ; -----------------------------------------------------------------------------
 STAPLAYU
 ; PLAY STATE UPDATE
@@ -110,13 +131,16 @@ STAPLAYP
             ;BRA     PLRPLOT
 
 ; -----------------------------------------------------------------------------
-STAINTRI    EQU     DMMINIT
+STAINTRI
 ; INTRO STATE INIT
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
-; NOTE     - JUST A WRAPPER FOR DMMINIT TO RELEASE ALL MEMORY
+; INITIALIZES SOUND LIBRARY AND FREES MEMORY
 ; -----------------------------------------------------------------------------
+            JSR     SNDINIT
+            BRA     DMMINIT
+
 
 ; -----------------------------------------------------------------------------
 STAINTRU
@@ -125,29 +149,50 @@ STAINTRU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            BTST.B  #KBDBITF1,(KBDEDGE)
-            BEQ     .END
             BTST.B  #KBDBITLF,(KBDEDGE)
             BNE.S   .LEFT
             BTST.B  #KBDBITRT,(KBDEDGE)
             BNE.S   .RIGHT
+            BTST.B  #KBDBITF1,(KBDEDGE)
+            BEQ     .END
             
-            MOVE.W  #STAPLAY,(STANEXT)
+            ; IF SPACE IS PRESSED
+            TST.B   (SNDSTA)                ; CHECK SOUND STATE
+            BNE.S   .NOSND
+            UTLPLAY PNCHSND                 ; play sound when pressed space
+.nosnd      MOVE.W  #STAPLAY,(STANEXT)
             BRA.S   .END
 
-.LEFT       CMP     #INTOESY,(XSPEED)
+.LEFT       ; CHECK IF POSSIBLE TO MOVE TO THE LEFT
+            CMP.W    #INTOESY,(XSPEED)
             BGT.S   .LF
-            BRA.S   .END
-.RIGHT      CMP     #INTOHRD,(XSPEED)
+            TST.B    (SNDSTA)               ; CHECK SOUND STATE
+            BNE.S   .nosnd1
+            UTLPLAY FLAPSND                 ; play sound when moving is no good
+.nosnd1     BRA.S   .END
+            
+            ; CHECK IF POSSIBLE TO MOVE TO THE RIGHT
+.RIGHT      CMP.W    #INTOHRD,(XSPEED)
             BLT.S   .RT
-            BRA     .END            
+            TST.B   (SNDSTA)                ; CHECK SOUND STATE
+            BNE.S   .nosnd2
+            UTLPLAY FLAPSND                 ; play sound when not possible
+.nosnd2     BRA     .END            
 
 .END        RTS
 
-.LF         SUB.W   #2,(XSPEED)
+            ; MOVE TO LEFTWARD OPTION
+.LF         TST.B   (SNDSTA)                ;CHECK SOUND STATE
+            BNE.S   .nosnd3
+            UTLPLAY MNOPTSD                 ; play sound when possible
+.nosnd3     SUB.W   #2,(XSPEED)
             BRA.S   .END
             
-.RT         ADD.W   #2,(XSPEED)
+            ; MOVE TO RIGHTWARD OPTION
+.RT         TST.B   (SNDSTA)
+            BNE.S   .nosnd4
+            UTLPLAY MNOPTSD                 ; play sound when possible
+.nosnd4     ADD.W   #2,(XSPEED)
             BRA.S   .END
 
 ; -----------------------------------------------------------------------------
@@ -160,6 +205,7 @@ STAINTRP
             ;Guardar registros en pila
             MOVEM.L A1/D0-D1,-(A7)
             
+            **********DIBUJAR TITULO**********
             ;Seleccionar fuente de texto
             UTLFONT INTTITC,INTTITF
             ;Seleccionar posicion de texto      
@@ -169,6 +215,30 @@ STAINTRP
             MOVE.B  #14,D0
             TRAP    #15
             
+            **********DIBUJAR SELECCION DE DIFICULTAD**********
+            ;Seleccionar fuente de texto
+            UTLFONT INTDSTC,INTDSTF
+            
+            ;Seleccionar posición de texto
+            UTLLOCT INTDSTX,INTDSTY
+            MOVE.W  (XSPEED),D0     ; CHECK NIVEL DE DIFICULTAD
+            CMP.W   #INTOESY,D0 
+            BEQ.S   .EASY           ; JUMP PARA NIVEL FACIL
+            CMP.W   #INTOHRD,D0     
+            BEQ.S   .HARD           ; JUMP PARA NIVEL DIFICIL
+            
+            LEA     .DIF_NRM,A1     ; VISUALIZAR STRING PARA NIVEL NORMAL
+            BRA.S   .TRAP
+.EASY       
+            LEA     .DIF_ESY,A1     ; VISUALIZAR STRING PARA NIVEL FACIL
+            BRA.S   .TRAP
+.HARD   
+            LEA     .DIF_HRD,A1     ; VISUALIZAR STRING PARA NIVEL DIFICIL
+.TRAP       
+            MOVEQ   #14,D0
+            TRAP    #15
+            
+            **********DIBUJAR PRESS SPACE**********
             ;Seleccionar fuente de texto
             UTLFONT INTPRSC,INTPRSF     
             ;Seleccionar posicion de texto
@@ -184,9 +254,9 @@ STAINTRP
 
 .TITLE      DC.B    'FLAPPY BIRD',0 
 .START_TEXT DC.B    'PRESS SPACE TO START',0
-.DIF_ESY    DC.B    'DIFICULTAD: FÁCIL',0
-.DIF_NRM    DC.B    'DIFICULTAD: NORMAL',0
-.DIF_HRD    DC.B    'DIFICULTAD: DIFICIL',0
+.DIF_ESY    DC.B    'DIFICULTAD: <- FÁCIL ->',0
+.DIF_NRM    DC.B    'DIFICULTAD: <- NORMAL ->',0
+.DIF_HRD    DC.B    'DIFICULTAD: <- DIFICIL ->',0
             DS.W    0
 
 
@@ -217,7 +287,7 @@ STAPAUU
             BTST.B  #KBDBITDN,(KBDEDGE)     ;Check cambio en estado de DOWN
             BNE.S   .DN
             BTST.B  #KBDBITF1,(KBDEDGE)     ;Check cambio en estado de FIRE1
-            BNE.S   .OK
+            BNE     .OK
             BTST.B  #KBDBITPS,(KBDEDGE)     ;Check cambio en estado de 'P'
             BEQ.S   .END
             
@@ -229,18 +299,38 @@ STAPAUU
             MOVE.L  (A7)+,D0
             RTS
 
-.UP         CMP.B   #CONTNUM,(PMOPTN)       ;Check si es posible cambiar a una
-            BLE.S   .END                    ;opción superior
-            SUBQ.B   #1,(PMOPTN)
+.UP         ; Si UP ha sido presionado
+            CMP.B   #CONTNUM,(PMOPTN)       ;Check si es posible cambiar a una
+            BLE.S   .chksd1                    ;opción superior
+            TST.B   (SNDSTA)                ;Check si el audio está ON
+            BNE.S   .nplaycnt
+            UTLPLAY MNOPTSD
+.nplaycnt   SUBQ.B   #1,(PMOPTN)
             BRA.S   .END
-            
-.DN         CMP.B   #EXTNUM,(PMOPTN)        ;Check si es posible cambiar a una
-            BGE.S   .END                    ;opción inferior
-            ADDQ.B   #1,(PMOPTN)
+.chksd1     
+            TST.B   (SNDSTA)                ;Check si el audio está ON
+            BNE.S   .nplay1
+            UTLPLAY FLAPSND
+.nplay1     BRA.S   .END
+                 
+.DN         ; Si DOWN ha sido presionado
+            CMP.B   #EXTNUM,(PMOPTN)        ;Check si es posible cambiar a una
+            BGE.S   .chksd2                    ;opción inferior
+            TST.B   (SNDSTA)                ;Check si el audio está ON
+            BNE.S   .nplayext
+            UTLPLAY MNOPTSD
+.nplayext   ADDQ.B   #1,(PMOPTN)
             BRA.S   .END
+.chksd2
+            TST.B   (SNDSTA)                ;Check si el audio está ON
+            BNE.S   .nplay2
+            UTLPLAY FLAPSND
+.nplay2     BRA.S   .END
             
-.OK         
-            CLR.L   D0                      ;Preparar registro D0
+.OK         TST.B   (SNDSTA)                ;Check si el audio está ON
+            BNE.S   .nplayok
+            UTLPLAY PNCHSND
+.nplayok    CLR.L   D0                      ;Preparar registro D0
             MOVE.B  (PMOPTN),D0
             MULU    #6,D0                   
             
@@ -308,10 +398,10 @@ STAPAUP
             ;Seleccionar fuente de texto
             CMP.B   #CONTNUM,(PMOPTN)
             BEQ.S   .CNTSEL
-            UTLFONT PAUOPTC,PAUOPTFU
+            UTLFONT PAUOPTC,PAUOPTFU        ; Fuente para opción (unselected)
             BRA.S   .SKPCNT
 
-.CNTSEL     UTLFONT PAUOPTC,PAUOPTFS
+.CNTSEL     UTLFONT PAUOPTC,PAUOPTFS        ; Fuente para opción (selected)
 .SKPCNT
             ;Seleccionar posición de texto
             UTLLOCT PAUOPTX,PAUCNTY
@@ -324,10 +414,10 @@ STAPAUP
             ;Seleccionar fuente de texto
             CMP.B   #NEWGNUM,(PMOPTN)
             BEQ.S   .NEWSEL
-            UTLFONT PAUOPTC,PAUOPTFU
+            UTLFONT PAUOPTC,PAUOPTFU        ; Fuente para opción (unselected)
             BRA.S   .SKPNEW
 
-.NEWSEL     UTLFONT PAUOPTC,PAUOPTFS
+.NEWSEL     UTLFONT PAUOPTC,PAUOPTFS        ; Fuente para opción (selected)
 .SKPNEW
             ;Seleccionar posición de texto
             UTLLOCT PAUOPTX,PAUNEWY
@@ -340,10 +430,10 @@ STAPAUP
             ;Seleccionar fuente de texto
             CMP.B   #TGLSNUM,(PMOPTN)
             BEQ.S   .SDSEL
-            UTLFONT PAUOPTC,PAUOPTFU
+            UTLFONT PAUOPTC,PAUOPTFU        ; Fuente para opción (unselected)
             BRA.S   .SKPSD
 
-.SDSEL      UTLFONT PAUOPTC,PAUOPTFS
+.SDSEL      UTLFONT PAUOPTC,PAUOPTFS        ; Fuente para opción (selected)
 .SKPSD
             ;Seleccionar posición de texto
             UTLLOCT PAUOPTX,PAUSDY
@@ -363,10 +453,10 @@ STAPAUP
             ;Seleccionar fuente de texto
             CMP.B   #EXTNUM,(PMOPTN)
             BEQ.S   .EXTSEL
-            UTLFONT PAUOPTC,PAUOPTFU
+            UTLFONT PAUOPTC,PAUOPTFU        ; Fuente para opción (unselected)
             BRA.S   .SKPEXT
 
-.EXTSEL     UTLFONT PAUOPTC,PAUOPTFS
+.EXTSEL     UTLFONT PAUOPTC,PAUOPTFS        ; Fuente para opción (selected)
 .SKPEXT
             ;Seleccionar posición de texto
             UTLLOCT PAUOPTX,PAUEXTY
@@ -414,7 +504,6 @@ STAGOVRU
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             BTST.B  #KBDBITF1,(KBDEDGE)
-            MOVE.B  (KBDEDGE),D7
             BEQ     .END
             MOVE.W  #STAINTR,(STANEXT)
 .END        RTS
@@ -455,7 +544,18 @@ GMRSET
             CLR.W   (PLRPOSX)
             CLR.W   (PLRPOSY)
             CLR.W   (PLRSCORE)
+            CLR.B   (PIPCYC)
             RTS   
+
+
+
+
+
+
+
+
+
+
 
 
 

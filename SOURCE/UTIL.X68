@@ -51,6 +51,18 @@ UTLFONT     MACRO
             TRAP    #15
             ENDM
 
+; -----------------------------------------------------------------------------
+UTLPLAY     MACRO
+; WRAPPER TO AUDIO FILE REPRODUCTION THROUGH STANDARD PLAYER
+; INPUT    - \1 REFERENCE NUMBER TO FILE IN MEMORY TO REPRODUCE
+; OUTPUT   - NONE
+; MODIFIES - D0-D1,A1
+; -----------------------------------------------------------------------------
+            MOVE.B  #\1,D1
+            MOVEQ   #72,D0
+            TRAP    #15
+            ENDM
+
 ; =============================================================================
 ; UTILITY SUBROUTINES
 ; =============================================================================
@@ -146,6 +158,10 @@ UTLRAND
             DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
+
+
+
+
 
 
 *~Font name~Courier New~

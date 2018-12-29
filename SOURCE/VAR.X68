@@ -25,6 +25,7 @@ PIPCOUNT    DC.B    1
 
 XSPEED      DC.W    5                       ; HORIZONTAL SPEED OF OBJECTS
 SNDSTA      DC.B    0                       ; SOUND STATE
+PIPCYC      DS.B    1                       ; SPAWN PIPES EVERY PIPCYC CYCLES
 
 ; --- PAUSE MENU RELATED VARIABLES -------------------------------------------
 
@@ -34,6 +35,7 @@ PMOPTN      DC.B    0                       ; OPTION ON THE MENU TO BE CHOSEN
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
 
 
 

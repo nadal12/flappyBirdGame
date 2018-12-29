@@ -10,11 +10,14 @@ STAPLAY     EQU     1                       ; NORMAL GAME STATE
 STAPAU      EQU     2                       ; PAUSE GAME STATE
 STAGOVR     EQU     3                       ; GAME OVER STATE
 
-; --- GAME STATES -------------------------------------------------------------
+; --- GAME RELATED CONSTANTS --------------------------------------------------
 
 *DO NOT CHANGE THE VALUE OF SOUNDON ($00)*
 SOUNDON     EQU     $00                     ; VALUE OF SNDSTA WHEN SOUND IS ON
 SOUNDOFF    EQU     $FF                     ; VALUE OF SNDSTA WHEN SOUND IS OFF
+GPIPCESY    EQU     $7F                     ; CREATE PIPES EVERY 128 CYCLES
+GPIPCNRM    EQU     $3F                     ; CREATE PIPES EVERY 64 CYCLES
+GPIPCHRD    EQU     $1F                     ; CREATE PIPES EVERY 32 CYCLES
 
 ; --- AGENT & PROP TYPES ------------------------------------------------------
 
@@ -48,13 +51,16 @@ INTTITY     EQU     1                       ; TITLE Y COORDINATE
 INTTITC     EQU     $0000FFFF               ; TITLE COLOR
 INTTITF     EQU     $033D0001               ; TITLE FONT
 INTPRSX     EQU     5                       ; PRESS FIRE X COORDINATE
-INTPRSY     EQU     8                       ; PRESS FIRE Y COORDINATE
+INTPRSY     EQU     10                       ; PRESS FIRE Y COORDINATE
 INTPRSC     EQU     $00000080               ; PRESS FIRE COLOR
 INTPRSF     EQU     $031A0001               ; PRESS FIRE FONT
 INTOESY     EQU     3                       ; DIFFICULTY LEVEL: EASY
 INTONRM     EQU     5                       ; DIFFICULTY LEVEL: NORMAL
 INTOHRD     EQU     7                       ; DIFFICULTY LEVEL: HARD
-INTDSTC     EQU     $00FFFFFF
+INTDSTC     EQU     $00FFFFFF               ; DIFFICULTY STRING COLOR
+INTDSTF     EQU     $01130000               ; DIFFICULTY STRING FONT
+INTDSTX     EQU     9                      ; DIFFICULTY STRING X COORD.
+INTDSTY     EQU     12                      ; DIFFICULTY STRING Y COORD.
 
 ; --- BACKGROUND RELATED CONSTANTS --------------------------------------------
 
@@ -78,7 +84,7 @@ PIPBWDT     EQU     50                      ; PIPE BASE WIDTH
 PIPTWDT     EQU     60                      ; PIPE MOUTH WIDTH
 PIPTHGT     EQU     10                      ; PIPE MOUTH HEIGHT
 PIPTBSPC    EQU     ((PIPTWDT-PIPBWDT)/2)   ; DIF.BETW. OUTER RAD. & IN. RAD
-PIPOPEN     EQU     80                      ; SPACE BETW. TOP AND BOTTOM PIPES
+PIPOPEN     EQU     90                      ; SPACE BETW. TOP AND BOTTOM PIPES
 PIPYSPD     EQU     2                       ; SPEED @ WHICH PIPES GO UP&DOWN
 
 ; --- CLOUD RELATED CONSTANTS -------------------------------------------------
@@ -109,12 +115,35 @@ PAUHLPF     EQU     $01090000               ; HELP TEXT FONT
 PAUHLPX     EQU     8                       ; HELP TEXT X COORD.
 PAUHLPY1    EQU     28                      ; HELP TEXT 1 Y COORD.
 PAUHLPY2    EQU     29                      ; HELP TEXT 2 Y COORD.
+
 ; --- GAME OVER STATE RELATED CONSTANTS ---------------------------------------
 
 GOVSTRX     EQU     13                      ; TITLE X COORDINATE
 GOVSTRY     EQU     6                       ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
 GOVSTRF     EQU     $01130001               ; TITLE FONT
+
+; --- SOUND RELATED CONSTANTS
+
+BRDLNG1     EQU     0                       ; SOUND NUM.REF. FOR BIRDS SINGING
+BRDLNG2     EQU     1                       ; SOUND NUM.REF. FOR BIRDS SINGING2
+BRDSHRT     EQU     2                       ; SOUND NUM.REF. FOR BIRD SOUND
+FLAPSND     EQU     3                       ; SOUND NUM.REF. FOR BIRD FLAP
+GOVRSND     EQU     4                       ; SOUND NUM.REF. FOR GAME OVER
+MNOPTSD     EQU     5                       ; SOUND NUM.REF. FOR MOVING IN MENU
+PNCHSND     EQU     6                       ; SOUND NUM.REF. FOR PUNCH SOUND
+VICTSND     EQU     7                       ; SOUND NUM.REF. FOR NEW HIGH SCORE
+
+
+
+
+
+
+
+
+
+
+
 
 
 
