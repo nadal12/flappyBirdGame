@@ -16,8 +16,8 @@ KBDEDGE     DS.B    1                       ; KEY CHANGED=1
 
 ; --- SCREEN RELATED VARIABLES ------------------------------------------------
 
+SCRCYCCT    DS.W    1                       ; CYCLE COUNTER
 SCRINTCT    DS.B    1                       ; INTERRUPT COUNTER/FLAG
-SCRCYCCT    DS.B    1                       ; CYCLE COUNTER
             DS.W    0
 
 ; --- DYNAMIC MEMORY VARIABLES ------------------------------------------------
@@ -25,6 +25,7 @@ SCRCYCCT    DS.B    1                       ; CYCLE COUNTER
             ORG     (*+DMMBSIZE-1)&-DMMBSIZE ; ALIGN TO DMMBSIZE
 DMMDATA     DS.B    DMMBSIZE*DMMBNUM        ; DYNAMIC MEMORY ALLOCATION SPACE
             DS.W    0                       ; JUST IN CASE (SIZE IS POW OF TWO)
+
 
 
 *~Font name~Courier New~

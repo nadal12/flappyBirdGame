@@ -83,7 +83,7 @@ SCRINIT
             ; - CLEAR SCRINTCT AND SCRCYCCT
             
             CLR.B   (SCRINTCT)
-            CLR.B   (SCRCYCCT)
+            CLR.W   (SCRCYCCT)
             
             ; - ENABLE INTS (SET INT BITS IN SR TO 000)
             
@@ -342,6 +342,7 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
+
 
 
 
