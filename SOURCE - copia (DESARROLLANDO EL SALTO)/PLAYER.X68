@@ -32,12 +32,22 @@ PLRUPD
           BEQ .MAKEJUMP
           ;No se ha apretado la tecla UP. Hay que bajar el pájaro. 
           MOVE.W (PLRPOSY), D0
-          ADD.W #7, D0
-          MOVE.W D0, (PLRPOSY)       
+          ADD.W (PLRSPEED), D0
+          ;Se incrementa la velocidad de bajada. 
+          ADDQ #1, (PLRSPEED)
+          MOVE.W D0, (PLRPOSY)
+          ;Comprobar si ha salido por la parte inferior
+          MOVE.W #BGGSSTP, D1
+          ADD.W #PLRHEIGHT, D0
+          CMP D0, D1
+          BMI .GAMEOVER         
        
           BRA .END         
 .PRESSED
           ;TECLA UP PRESIONADA
+          ;Se reinicia la velocidad de bajada. 
+          MOVE.W #1, (PLRSPEED)
+
           ;Se establece el límite hasta donde subirá
           MOVE.W (PLRPOSY), D0
           SUB.W #JUMPSIZE, D0
@@ -54,22 +64,29 @@ PLRUPD
           MOVE.W (PLRPOSY), D0
           MOVE.W (MAXPOS), D1
           SUB.W  D1, D0             ;FÓRMULA: (PLRPOSY-MAXPOS)/2 = VALOR QUE SE TIENE QUE RESTAR A LA POSICIÓN ACTUAL PARA OBTENER LA NUEVA POSICIÓN
-          DIV.W #4, D0
-          MOVE.W D0, (MAXPOS)
+          DIVU.W #3, D0
           SUB.W D0, (PLRPOSY)       ;NEWPOS
+          ;Ver si ha salido por la parte superior. 
+          CMP #0, (PLRPOSY)
+          BMI .GAMEOVER
           CMP #1, D0
+          BMI .LASTJUMP
           BEQ .LASTJUMP
           ;El salto no ha finalizado (No ha llegado a MAXPOS)
-
-                    
+                              
           
           BRA .END
           
 .LASTJUMP
           ;El salto ha llegado a MAXPOS
           ;Se desactiva la tecla UP indicando que lo siguiente será realizar la bajada. 
-        ;  MOVE.W #0, (UPPRESSED)         
+          MOVE.W #0, (UPPRESSED)         
           BRA .END    
+          
+.GAMEOVER
+
+          MOVE.W #STAGOVR, (STANEXT)        
+          BRA .END         
                  
 .END
           
@@ -327,6 +344,7 @@ PLRPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS
+
 
 
 

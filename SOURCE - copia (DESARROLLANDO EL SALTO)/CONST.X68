@@ -61,7 +61,7 @@ PLRWIDTH        EQU 30
 PLRHEIGHT       EQU 30
 PLRINITPOSX     EQU 150
 PLRINITPOSY     EQU 180
-JUMPSIZE        EQU 10
+JUMPSIZE        EQU 60
 
 ; --- PIPE RELATED CONSTANTS --------------------------------------------------
 
@@ -103,6 +103,7 @@ PAUSELC     EQU     $000000FF               ; SELECTED OPTION COLOUR
 GOVSTRX     EQU     35                      ; TITLE X COORDINATE
 GOVSTRY     EQU     15                      ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
+
 
 
 
