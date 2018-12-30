@@ -24,80 +24,132 @@ PLRUPD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
           MOVEM.L D0/D1/D2,-(A7)
-          
           BTST.B #KBDBITUP, (KBDEDGE)    
           BNE.L  .PRESSED
-          ;NOT PRESSED
+        
+          ;TECLA NO PRESIONADA
           CMP #1, (UPPRESSED)
-          BEQ .ANALYSEJUMP
+          BEQ .MAKEJUMP
+          ;No se ha apretado la tecla UP. Hay que bajar el pájaro. 
           MOVE.W (PLRPOSY), D0
-          ADD.W (PLRSPEED), D0
-          MOVE.W D0, (PLRPOSY)
-          ADDQ #1, (PLRSPEED)
-         
-          ;GAME OVER BOTTOM
-*          MOVE.W (PLRPOSY), D7
-*          MOVE.W #BGGSSTP, D6
-*          CMP D7, D6
-*          BMI .GOV
-          
-          BRA .END
-          
-.ANALYSEJUMP
-
-          MOVE.W (MAXPOS), D0
-          MOVE.W (PLRPOSY), D1
-          CMP D1,D0
-          BLT .JUMPNOFINISHED 
-          MOVE.W #0, (UPPRESSED)
-          BRA .END
-          
-.JUMPNOFINISHED          
-          
-          MOVE.W (PLRPOSY), D0
-          
-          MOVE.W (PLRSPEED), D1
-          DIVU #2, D1
-          MOVE.W D1, (PLRSPEED)  
-      
-          
-          SUB.W (PLRSPEED), D0
-          MOVE.W D0, (PLRPOSY)
-
-
-          SUB.W (PLRPOSY), D5
-          DIVU #2, D5
-          BEQ .JUMPFINISHED    
-
-          BRA .END
-      
-;GAME OVER TOP 
-*          CMP #0, D0
-*          BMI .GOV
-*          BRA .END
-*.GOV      
-*          MOVE.W #STAGOVR, (STANEXT)        
-*          BRA .END
-          
+          ADD.W #7, D0
+          MOVE.W D0, (PLRPOSY)       
+       
+          BRA .END         
 .PRESSED
-
-          ;PRESSED 
-          MOVE.W (PLRPOSY), D2
-          MOVE.W (PLRPOSY), D5
-
-          SUB.W #60, D2             
-          MOVE.W D2, (MAXPOS)
+          ;TECLA UP PRESIONADA
+          ;Se establece el límite hasta donde subirá
+          MOVE.W (PLRPOSY), D0
+          SUB.W #JUMPSIZE, D0
+          MOVE.W D0, (MAXPOS)
+          ;Se indica que se ha presionado la tecla de salto
           MOVE.W #1, (UPPRESSED)
-          MOVE.W #60, (PLRSPEED)
-         
-.JUMPFINISHED    
-
-          MOVE.W #0, (UPPRESSED)
-          MOVE.W #333, D4
           
+          BRA .END   
+      
+.MAKEJUMP
+          ;Se ha apretado la tecla UP anteriormente (eso indica que el salto no
+          ; ha finalizado). 
+          
+          MOVE.W (PLRPOSY), D0
+          MOVE.W (MAXPOS), D1
+          SUB.W  D1, D0             ;FÓRMULA: (PLRPOSY-MAXPOS)/2 = VALOR QUE SE TIENE QUE RESTAR A LA POSICIÓN ACTUAL PARA OBTENER LA NUEVA POSICIÓN
+          DIV.W #4, D0
+          MOVE.W D0, (MAXPOS)
+          SUB.W D0, (PLRPOSY)       ;NEWPOS
+          CMP #1, D0
+          BEQ .LASTJUMP
+          ;El salto no ha finalizado (No ha llegado a MAXPOS)
 
+                    
+          
+          BRA .END
+          
+.LASTJUMP
+          ;El salto ha llegado a MAXPOS
+          ;Se desactiva la tecla UP indicando que lo siguiente será realizar la bajada. 
+        ;  MOVE.W #0, (UPPRESSED)         
+          BRA .END    
+                 
 .END
-
+          
+          MOVEM.L (A7)+,D0/D1/D2
+          RTS
+          
+          
+*          BTST.B #KBDBITUP, (KBDEDGE)    
+*          BNE.L  .PRESSED
+*          ;NOT PRESSED
+*          CMP #1, (UPPRESSED)
+*          BEQ .ANALYSEJUMP
+*          MOVE.W (PLRPOSY), D0
+*          ADD.W (PLRSPEED), D0
+*          MOVE.W D0, (PLRPOSY)
+*          ADDQ #1, (PLRSPEED)
+*         
+*          ;GAME OVER BOTTOM
+**          MOVE.W (PLRPOSY), D7
+**          MOVE.W #BGGSSTP, D6
+**          CMP D7, D6
+**          BMI .GOV
+*          
+*          BRA .END
+*          
+*.ANALYSEJUMP
+*
+*          MOVE.W (MAXPOS), D0
+*          MOVE.W (PLRPOSY), D1
+*          CMP D1,D0
+*          BLT .JUMPNOFINISHED 
+*          MOVE.W #0, (UPPRESSED)
+*          BRA .END
+*          
+*.JUMPNOFINISHED          
+*          
+*          MOVE.W (PLRPOSY), D0
+*          
+*          MOVE.W (PLRSPEED), D1
+*          DIVU #2, D1
+*          MOVE.W D1, (PLRSPEED)  
+*      
+*          
+*          SUB.W (PLRSPEED), D0
+*          MOVE.W D0, (PLRPOSY)
+*
+*
+*          SUB.W (PLRPOSY), D5
+*          DIVU #2, D5
+*          BEQ .JUMPFINISHED    
+*
+*          BRA .END
+*      
+*;GAME OVER TOP 
+**          CMP #0, D0
+**          BMI .GOV
+**          BRA .END
+**.GOV      
+**          MOVE.W #STAGOVR, (STANEXT)        
+**          BRA .END
+*          
+*.PRESSED
+*
+*          ;PRESSED 
+*          MOVE.W (PLRPOSY), D2
+*          MOVE.W (PLRPOSY), D5
+*
+*          SUB.W #60, D2             
+*          MOVE.W D2, (MAXPOS)
+*          MOVE.W #1, (UPPRESSED)
+*          MOVE.W #60, (PLRSPEED)
+*         
+*.JUMPFINISHED    
+*
+*          MOVE.W #0, (UPPRESSED)
+*          MOVE.W #333, D4
+*          
+*
+*.END
+*
           
           
           
@@ -152,9 +204,6 @@ PLRUPD
 *          MOVE.W #8, (PLRSPEED)
 *
 *.END
-
-          MOVEM.L (A7)+,D0/D1/D2
-          RTS
 
 ; -----------------------------------------------------------------------------
 PLRPLOT
@@ -278,6 +327,7 @@ PLRPLOT
             MOVEM.L (A7)+,D0-D4
             
             RTS
+
 
 
 
