@@ -13,7 +13,7 @@ PIPINIT
 ; -----------------------------------------------------------------------------
             ;Guardar registros
             MOVEM.L D0-D1,-(A7)
-        
+            
             MOVE.W  #SCRWIDTH,(A0)      ;X COORDINATE OF STARTING POSITION
             JSR     UTLRAND             ;RANDOM Y COORDINATE OF STARTING
             MOVE.W  D0,2(A0)            *POSITION
@@ -32,8 +32,8 @@ PIPINIT
 PIPUPD
 ; PIPE UPDATE
 ; -----------------------------------------------------------------------------
-            ;Guardar registros
-            MOVE.L  D0,-(A7)
+             ;Guardar registros
+            MOVEM.L  D0-D7,-(A7)
             
             MOVE.W  (XSPEED),D0     
             SUB.W   D0,(A0)         ;UPDATE X COORDINATE
@@ -43,10 +43,21 @@ PIPUPD
             
 *            CMP.B   #0,4(A0)       ;CHECK IF MOVING
 *            BNE.S   .END
-            
+
+            ;Preparar los registros para llamar a la subrutina que comprueba 
+            ;las colisiones con las tuberías. 
+            MOVE.W (A0), D0
+            MOVE.W 2(A0), D1
+            MOVE.W (PLRPOSX), D2
+            MOVE.W (PLRPOSY), D3
+            MOVE.W #PIPBWDT, D4
+            MOVE.W #PLRWIDTH, D5
+            MOVE.W #PIPOPEN, D6
+            MOVE.W #PLRHEIGHT, D7
+            JSR UTLCHCOL           
             
 .END        ;Restaurar registros
-            MOVE.L  (A7)+,D0
+            MOVEM.L  (A7)+,D0-D7
             RTS
             
 .KILL       JSR     AGLKILL
@@ -115,6 +126,13 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
+
+
+
+
+
+
+
 
 
 

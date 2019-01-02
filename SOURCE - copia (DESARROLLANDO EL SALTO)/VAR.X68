@@ -14,11 +14,13 @@ PLRPOSY      DS.W    1                       ; PLAYER Y POSITION (PIXELS)
 MAXPOS       DS.W    1                       ; JUMP MAX POSITION
 UPPRESSED    DS.W    1                       ; 1 IF UP PRESSED, 0 IF NO PRESSED
 PLRDOWNSPEED DS.W    1                       ; PLAYER DOWN SPEED
+PLRDEAD      DS.W    1                       ; PLAYER DEAD
              DS.W    0
             
 ; --- PIPE RELATED VARIABLES --------------------------------------------------
 
 PIPCOUNT    DC.B    1
+PIPEPOSX    DC.W    1
             DS.W    0
 
 ; --- GAME RELATED VARIABLES --------------------------------------------------
@@ -33,6 +35,8 @@ PMOPTN      DC.B    0                       ;OPTION ON THE MENU TO BE CHOSEN
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
+
 
 
 

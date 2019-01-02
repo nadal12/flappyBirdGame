@@ -15,6 +15,8 @@ PLRINIT
         MOVE.W #PLRINITPOSY,(MAXPOS)
         MOVE.W #0, (UPPRESSED)
         MOVE.W #1, (PLRDOWNSPEED)
+        CLR    (PLRDEAD)               ;Poner a 0 PLRDEAD (Jugador vivo).
+
         RTS
 ; -----------------------------------------------------------------------------
 PLRUPD
@@ -23,9 +25,13 @@ PLRUPD
 ; OUTPUT   - NONE (MODIFIES PLAYER DATA)
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-          MOVEM.L D0/D1,-(A7)
+          MOVEM.L D0/D1/D2/D3,-(A7)
           BTST.B #KBDBITUP, (KBDEDGE)    
           BNE.L  .PRESSED
+        
+         ;Comprobar colisión con tubería. 
+          CMP #1, (PLRDEAD)
+          BEQ .GAMEOVER 
         
           ;TECLA NO PRESIONADA
           CMP #1, (UPPRESSED)
@@ -36,6 +42,7 @@ PLRUPD
           ;Se incrementa la velocidad de bajada. 
           ADDQ #1, (PLRDOWNSPEED)
           MOVE.W D0, (PLRPOSY)
+         
           ;Comprobar si ha salido por la parte inferior
           MOVE.W #BGGSSTP, D1
           ADD.W #PLRHEIGHT, D0
@@ -66,6 +73,7 @@ PLRUPD
           SUB.W  D1, D0             ;FÓRMULA: (PLRPOSY-MAXPOS)/JUMPSPEED = VALOR QUE SE TIENE QUE RESTAR A LA POSICIÓN ACTUAL PARA OBTENER LA NUEVA POSICIÓN
           DIVU.W #JUMPSPEED, D0
           SUB.W D0, (PLRPOSY)       ;NEWPOS
+
           ;Ver si ha salido por la parte superior. 
           CMP #0, (PLRPOSY)
           BMI .GAMEOVER
@@ -74,7 +82,6 @@ PLRUPD
           BEQ .LASTJUMP
           ;El salto no ha finalizado (No ha llegado a MAXPOS)
                               
-          
           BRA .END
           
 .LASTJUMP
@@ -90,7 +97,7 @@ PLRUPD
                  
 .END
           
-          MOVEM.L (A7)+,D0/D1
+          MOVEM.L (A7)+,D0/D1/D2/D3
           RTS
           
 ; -----------------------------------------------------------------------------
@@ -234,6 +241,11 @@ PLRPLOT
             MOVEM.L (A7)+,D0-D5
             
             RTS
+
+
+
+
+
 
 
 *~Font name~Courier New~

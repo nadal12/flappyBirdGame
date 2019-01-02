@@ -78,23 +78,45 @@ UTLCHCOL
 ; OUTPUT   - D0.B=FF - COLLISION, =0 - NO COLLISION
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.W D4-D7,-(A7)
-            ADD.W   D0,D4
-            CMP.W   D2,D4
-            BLE     .NOCOL
-            ADD.W   D2,D5
-            CMP.W   D0,D5
-            BLE     .NOCOL
-            ADD.W   D1,D6
-            CMP.W   D3,D6
-            BLE     .NOCOL
-            ADD.W   D3,D7
-            CMP.W   D1,D7
-            BLE     .NOCOL
-            MOVE.B  #$FF,D0
-            BRA     .END
-.NOCOL      CLR.B   D0
-.END        MOVEM.W (A7)+,D4-D7
+             MOVEM.W D0/D2/D4/D6/D7,-(A7)
+
+            ;Verificar si la tubería esta delante o detrás del pájaro. 
+            
+            ADD.W D0, D4 ;Pared derecha de la tubería.
+            CMP D2, D4
+            BCS .NOCOL
+            
+            ;Comprobar si el pájaro ha alcanzado la tubería.
+            
+            ADD.W D5, D2 ;Parte delantera del pájaro.
+            CMP D1, D2
+            BCS .NOCOL
+          
+            ;Comprobar parte inferior del pájaro con la parte superior de la 
+            ;tubería inferior.
+            
+            ADD.W D1, D6 ;Parte superior de la tubería inferior.
+            ADD.W D3, D7 ;Parte inferior del pájaro. 
+            CMP D6, D7
+            BCS .NOCOL
+
+            CMP D1, D3
+            BLE .COL 
+            
+            ;Comprobar la colisión de la parte superior del pájaro con la 
+            ;parte inferior de la tubería superior. 
+            CMP D3, D1                                                      ;SIEMPRE LLEGA AQUI Y SALTA A NOCOL, POR ESO NUNCA SE MATA. 
+            BCS .NOCOL
+            
+           ;Si no se realiza ninguno de los saltos anteriores, hay colisión. 
+.COL
+            MOVE.W  #1, (PLRDEAD)
+            BRA .END                
+
+.NOCOL                    
+            MOVE.W #0, (PLRDEAD)
+.END          
+            MOVEM.W (A7)+,D0/D2/D4/D6/D7
             RTS
 
 ; -----------------------------------------------------------------------------
@@ -146,6 +168,12 @@ UTLRAND
             DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
+
+
+
+
+
+
 
 
 *~Font name~Courier New~
