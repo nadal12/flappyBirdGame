@@ -410,7 +410,7 @@ STAPAUP
             UTLFONT PAUOPTC,PAUOPTFU        ; Fuente para opción (unselected)
             BRA.S   .SKPCNT
 
-.CNTSEL     UTLFONT PAUOPTC,PAUOPTFS        ; Fuente para opción (selected)
+.CNTSEL     UTLFONT PAUOPTC2,PAUOPTFS        ; Fuente para opción (selected)
 .SKPCNT
             ;Seleccionar posición de texto
             UTLLOCT PAUOPTX,PAUCNTY
@@ -426,7 +426,7 @@ STAPAUP
             UTLFONT PAUOPTC,PAUOPTFU        ; Fuente para opción (unselected)
             BRA.S   .SKPNEW
 
-.NEWSEL     UTLFONT PAUOPTC,PAUOPTFS        ; Fuente para opción (selected)
+.NEWSEL     UTLFONT PAUOPTC2,PAUOPTFS        ; Fuente para opción (selected)
 .SKPNEW
             ;Seleccionar posición de texto
             UTLLOCT PAUOPTX,PAUNEWY
@@ -442,7 +442,7 @@ STAPAUP
             UTLFONT PAUOPTC,PAUOPTFU        ; Fuente para opción (unselected)
             BRA.S   .SKPSD
 
-.SDSEL      UTLFONT PAUOPTC,PAUOPTFS        ; Fuente para opción (selected)
+.SDSEL      UTLFONT PAUOPTC2,PAUOPTFS        ; Fuente para opción (selected)
 .SKPSD
             ;Seleccionar posición de texto
             UTLLOCT PAUOPTX,PAUSDY
@@ -465,7 +465,7 @@ STAPAUP
             UTLFONT PAUOPTC,PAUOPTFU        ; Fuente para opción (unselected)
             BRA.S   .SKPEXT
 
-.EXTSEL     UTLFONT PAUOPTC,PAUOPTFS        ; Fuente para opción (selected)
+.EXTSEL     UTLFONT PAUOPTC2,PAUOPTFS        ; Fuente para opción (selected)
 .SKPEXT
             ;Seleccionar posición de texto
             UTLLOCT PAUOPTX,PAUEXTY
@@ -495,7 +495,7 @@ STAPAUP
             RTS
             
 ; --- LOCAL DATA -----------------
-.TITLE      DC.B    'MENU DE PAUSA',0
+.TITLE      DC.B    'FLAPPY BIRD',0
 .CONT       DC.B    'CONTINUAR',0
 .NEWG       DC.B    'JUEGO NUEVO',0
 .SDON       DC.B    'SONIDO: ON',0
@@ -598,6 +598,7 @@ GMRSET
 
 
 
+<<<<<<< Updated upstream
 
 
 
@@ -608,6 +609,8 @@ GMRSET
 
 
 
+=======
+>>>>>>> Stashed changes
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

@@ -46,14 +46,14 @@ PLRPBDMG    EQU     1                       ; PLOT DAMAGE BIT
 
 ; --- INTRO STATE RELATED CONSTANTS -------------------------------------------
 
-INTTITX     EQU     1                       ; TITLE X COORDINATE
+INTTITX     EQU     2                       ; TITLE X COORDINATE
 INTTITY     EQU     1                       ; TITLE Y COORDINATE
 INTTITC     EQU     $0000FFFF               ; TITLE COLOR
-INTTITF     EQU     $033D0001               ; TITLE FONT
-INTPRSX     EQU     5                       ; PRESS FIRE X COORDINATE
-INTPRSY     EQU     10                       ; PRESS FIRE Y COORDINATE
+INTTITF     EQU     $013D0001               ; TITLE FONT
+INTPRSX     EQU     3                       ; PRESS FIRE X COORDINATE
+INTPRSY     EQU     8                      ; PRESS FIRE Y COORDINATE
 INTPRSC     EQU     $00000080               ; PRESS FIRE COLOR
-INTPRSF     EQU     $031A0001               ; PRESS FIRE FONT
+INTPRSF     EQU     $011A0001               ; PRESS FIRE FONT
 INTOESY     EQU     3                       ; DIFFICULTY LEVEL: EASY
 INTONRM     EQU     5                       ; DIFFICULTY LEVEL: NORMAL
 INTOHRD     EQU     7                       ; DIFFICULTY LEVEL: HARD
@@ -100,12 +100,13 @@ NEWGNUM     EQU     1                       ; NEW GAME NUMBER
 TGLSNUM     EQU     2                       ; TOGGLE SOUND NUMBER
 EXTNUM      EQU     3                       ; EXIT GAME NUMBER
 PAUTITC     EQU     $0000FFFF               ; TITLE COLOUR
-PAUTITF     EQU     $03300001               ; TITLE FONT
-PAUOPTFU    EQU     $01130001               ; OPTION FONT (unselected)
-PAUOPTFS    EQU     $01130005               ; OPTION FONT (selected)
-PAUOPTC     EQU     $00FFFFFF               ; OPTION COLOUR
+PAUTITF     EQU     $013D0001               ; TITLE FONT
 PAUTITX     EQU     2                       ; TITLE COORD. X
 PAUTITY     EQU     1                       ; TITLE COORD. Y
+PAUOPTFU    EQU     $01130001               ; OPTION FONT (unselected)
+PAUOPTFS    EQU     $01130001               ; OPTION FONT (selected)
+PAUOPTC     EQU     $00FFFFFF               ; OPTION COLOUR (unselected)
+PAUOPTC2    EQU     $0000FFFF               ; OPTION COLOUR (selected)
 PAUOPTX     EQU     12                      ; OPTIONS COORD. X
 PAUCNTY     EQU     8                       ; CONTINUE OPTION COORD. Y
 PAUNEWY     EQU     9                       ; NEW GAME OPTION COORD. Y
@@ -134,6 +135,8 @@ MNOPTSD     EQU     5                       ; SOUND NUM.REF. FOR MOVING IN MENU
 PNCHSND     EQU     6                       ; SOUND NUM.REF. FOR PUNCH SOUND
 VICTSND     EQU     7                       ; SOUND NUM.REF. FOR NEW HIGH SCORE
 BGSND       EQU     8                       ; SOUND NUM.REF. FOR BACKGROUND SND
+
+
 
 
 
