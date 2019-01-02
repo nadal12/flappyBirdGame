@@ -101,7 +101,7 @@ PLRPLOT
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
-            MOVEM.L D0-D4,-(A7)
+            MOVEM.L D0-D5,-(A7)
 
 
             ;SET PLAYER COLOR 
@@ -122,6 +122,8 @@ PLRPLOT
             ADD.W   #PLRHEIGHT,D4
             MOVE.B  #88,D0
             TRAP    #15
+            
+            
             SUB.W   #PLRWIDTH/2,D3
             MOVE.B  #87,D0
             TRAP    #15
@@ -179,20 +181,35 @@ PLRPLOT
 *            TRAP    #15
             
            ;---------MOUTH------
-            
-            ;PLOT EYE OF CHARACTER
-            CLR     D1
-            MOVE.B  #80,D0
-            TRAP    #15
-            ADDQ.B  #1,D0
-            TRAP    #15
-                   
-            ;SET EYE COLOR
+                               
+            ;SET MOUTH COLOR
             MOVE.L  #81, D0
             MOVE.L  #RED, D1
             TRAP    #15
-
+*    
+*            MOVE.W  (PLRPOSX),D1  
+*            MOVE.W  (PLRPOSY),D2   
+*            MOVE.W  (PLRPOSX),D3   
+*            MOVE.W  (PLRPOSY),D4   
+*
+*            
+*            ;MOUTH POSX (RESPECT PLRWIDTH)         
+*            ADD.W   #PLRWIDTH/2,D1
+*            
+*            ;MOUTH POSY (RESPECT PLRHEIGHT)
+*            ADD.W   #PLRHEIGHT/2,D2
+*            
+*            ;MOUTH POSX
+*            ADD.W   ,D3
+*   
+*            ;MOUTH HEIGHT 
+*            ADD.W   #PLRHEIGHT,D4
+*            
+*            ;LLAMADA AL TRAP (DIBUJADO)
+*            MOVE.B  #88,D0
+*            TRAP    #15
             
+               
             MOVE.W  (PLRPOSX),D1   
             
             ;EYE WIDTH         
@@ -212,16 +229,14 @@ PLRPLOT
             MOVE.B  #88,D0
             TRAP    #15
             
-            MOVEM.L (A7)+,D0-D4
+
+            
+            MOVEM.L (A7)+,D0-D5
             
             RTS
 
 
-
-
-
-
 *~Font name~Courier New~
-*~Font size~10~
+*~Font size~11~
 *~Tab type~1~
 *~Tab size~4~
