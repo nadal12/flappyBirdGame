@@ -46,22 +46,23 @@ BGGNDTP     EQU     BGGSSBT                 ; GROUND TOP EDGE (Y) COORDINATE
 
       ;Player colours
 
-GREEN EQU $00008000 
-RED   EQU $000000FF 
-WHITE EQU $00FFFFFF 
-BLACK EQU $00000000
+GREEN EQU $00008000                         ;GREEN COLOR
+RED   EQU $000000FF                         ;RED COLOR
+WHITE EQU $00FFFFFF                         ;WHITE COLOR
+BLACK EQU $00000000                         ;BLACK COLOR
 
       ;Constants
       
-PLRCOLOR        EQU GREEN
-PLREYECOLOR     EQU WHITE
-PLRIRISCOLOR    EQU BLACK
-PLRMOUTHCOLOR   EQU RED
-PLRWIDTH        EQU 30
-PLRHEIGHT       EQU 30
-PLRINITPOSX     EQU 150
-PLRINITPOSY     EQU 180
-JUMPSIZE        EQU 60
+PLRCOLOR        EQU GREEN                   ;PLAYER COLOR
+PLREYECOLOR     EQU WHITE                   ;PLAYER EYE COLOR
+PLRIRISCOLOR    EQU BLACK                   ;PLAYER IRIS COLOR
+PLRMOUTHCOLOR   EQU RED                     ;PLAYER MOUTH COLOR
+PLRWIDTH        EQU 30                      ;PLAYER WIDTH
+PLRHEIGHT       EQU 30                      ;PLAYER HEIGHT
+PLRINITPOSX     EQU 150                     ;INITIAL POSITION OF THE PLAYER (X)
+PLRINITPOSY     EQU 180                     ;INITIAL POSITION OF THE PLAYER (Y)
+JUMPSIZE        EQU 60                      ;JUMP SIZE
+JUMPSPEED       EQU 3                       ;JUMP SPEED (BIG VALUE = SLOW SPEED).
 
 ; --- PIPE RELATED CONSTANTS --------------------------------------------------
 
@@ -103,6 +104,8 @@ PAUSELC     EQU     $000000FF               ; SELECTED OPTION COLOUR
 GOVSTRX     EQU     35                      ; TITLE X COORDINATE
 GOVSTRY     EQU     15                      ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
+
+
 
 
 

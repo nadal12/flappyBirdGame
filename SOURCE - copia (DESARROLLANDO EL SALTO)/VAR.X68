@@ -9,12 +9,12 @@ STANEXT     DS.W    1                       ; NEXT GAME STATE
 
 ; --- PLAYER RELATED VARIABLES ------------------------------------------------
 
-PLRPOSX     DS.W    1                       ; PLAYER X POSITION (PIXELS)
-PLRPOSY     DS.W    1                       ; PLAYER Y POSITION (PIXELS)
-MAXPOS      DS.W    1
-UPPRESSED   DS.W    1
-PLRSPEED    DS.W    1
-            DS.W    0
+PLRPOSX      DS.W    1                       ; PLAYER X POSITION (PIXELS)
+PLRPOSY      DS.W    1                       ; PLAYER Y POSITION (PIXELS)
+MAXPOS       DS.W    1                       ; JUMP MAX POSITION
+UPPRESSED    DS.W    1                       ; 1 IF UP PRESSED, 0 IF NO PRESSED
+PLRDOWNSPEED DS.W    1                       ; PLAYER DOWN SPEED
+             DS.W    0
             
 ; --- PIPE RELATED VARIABLES --------------------------------------------------
 
@@ -33,6 +33,7 @@ PMOPTN      DC.B    0                       ;OPTION ON THE MENU TO BE CHOSEN
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
 
 
 
