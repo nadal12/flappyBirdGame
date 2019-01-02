@@ -158,42 +158,37 @@ STAINTRU
             BEQ     .END
             
             ; IF SPACE IS PRESSED
-            TST.B   (SNDSTA)                ; CHECK SOUND STATE
-            BNE.S   .NOSND
-            UTLPLAY PNCHSND                 ; play sound when pressed space
-.nosnd      MOVE.W  #STAPLAY,(STANEXT)
+            MOVE.B  #PNCHSND,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            MOVE.W  #STAPLAY,(STANEXT)
             BRA.S   .END
 
 .LEFT       ; CHECK IF POSSIBLE TO MOVE TO THE LEFT
             CMP.W    #INTOESY,(XSPEED)
             BGT.S   .LF
-            TST.B    (SNDSTA)               ; CHECK SOUND STATE
-            BNE.S   .nosnd1
-            UTLPLAY FLAPSND                 ; play sound when moving is no good
-.nosnd1     BRA.S   .END
+            MOVE.B  #FLAPSND,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            BRA.S   .END
             
             ; CHECK IF POSSIBLE TO MOVE TO THE RIGHT
 .RIGHT      CMP.W    #INTOHRD,(XSPEED)
             BLT.S   .RT
-            TST.B   (SNDSTA)                ; CHECK SOUND STATE
-            BNE.S   .nosnd2
-            UTLPLAY FLAPSND                 ; play sound when not possible
-.nosnd2     BRA     .END            
+            MOVE.B  #FLAPSND,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            BRA     .END            
 
 .END        RTS
 
             ; MOVE TO LEFTWARD OPTION
-.LF         TST.B   (SNDSTA)                ;CHECK SOUND STATE
-            BNE.S   .nosnd3
-            UTLPLAY MNOPTSD                 ; play sound when possible
-.nosnd3     SUB.W   #2,(XSPEED)
+.LF         MOVE.B  #MNOPTSD,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            SUB.W   #2,(XSPEED)
             BRA.S   .END
             
             ; MOVE TO RIGHTWARD OPTION
-.RT         TST.B   (SNDSTA)
-            BNE.S   .nosnd4
-            UTLPLAY MNOPTSD                 ; play sound when possible
-.nosnd4     ADD.W   #2,(XSPEED)
+.RT         MOVE.B  #MNOPTSD,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            ADD.W   #2,(XSPEED)
             BRA.S   .END
 
 ; -----------------------------------------------------------------------------
@@ -305,32 +300,28 @@ STAPAUU
 .UP         
             CMP.B   #CONTNUM,(PMOPTN)       ;Check si es posible cambiar a una
             BLE.S   .chksd1                 ;opción superior
-            TST.B   (SNDSTA)                ;Check si el audio está ON
-            BNE.S   .nplaycnt
-            UTLPLAY MNOPTSD
-.nplaycnt   SUBQ.B   #1,(PMOPTN)
+            MOVE.B  #MNOPTSD,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            SUBQ.B   #1,(PMOPTN)
             BRA.S   .END
 .chksd1     
-            TST.B   (SNDSTA)                ;Check si el audio está ON
-            BNE.S   .nplay1
-            UTLPLAY FLAPSND
-.nplay1     BRA.S   .END
+            MOVE.B  #FLAPSND,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            BRA.S   .END
 
 ; --- Si DOWN ha sido presionado ----------
               
 .DN
             CMP.B   #EXTNUM,(PMOPTN)        ;Check si es posible cambiar a una
             BGE.S   .chksd2                 ;opción inferior
-            TST.B   (SNDSTA)                ;Check si el audio está ON
-            BNE.S   .nplayext
-            UTLPLAY MNOPTSD
-.nplayext   ADDQ.B   #1,(PMOPTN)
+            MOVE.B  #MNOPTSD,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            ADDQ.B   #1,(PMOPTN)
             BRA.S   .END
 .chksd2
-            TST.B   (SNDSTA)                ;Check si el audio está ON
-            BNE.S   .nplay2
-            UTLPLAY FLAPSND
-.nplay2     BRA.S   .END
+            MOVE.B  #FLAPSND,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            BRA.S   .END
             
 ; --- Si OK ha sido presionado ----------
             
@@ -346,15 +337,15 @@ STAPAUU
             
             TST.B   (SNDSTA)            ;IF (SNDSTA) == 0 -> SOUND IS ON
             BEQ.S   .turnoff
-            MOVE.B #SOUNDON,(SNDSTA)
+            MOVE.B  #SOUNDON,(SNDSTA)   ;Turn on if sound was previously off
+            BRA.S   .skptglok
 .turnoff
-            MOVE.B #SOUNDOFF,(SNDSTA)
-            
+            MOVE.B #SOUNDOFF,(SNDSTA)   ;turn off if sound was previously on
+.skptglok
             ;PLAY SOUND IF NECESSARY
-.NOTTGL     TST.B   (SNDSTA)                ;Check si el audio está ON
-            BNE.S   .nplayok
-            UTLPLAY PNCHSND
-.nplayok    CLR.L   D0                      ;Preparar registro D0
+.NOTTGL     MOVE.B  #PNCHSND,D1         ; PREPARAR REGISTRO PARA SUBRUTINA
+            JSR     UTLPLAY
+            CLR.L   D0                      ;Preparar registro D0
             MOVE.B  (PMOPTN),D0
             MULU    #6,D0                   
             
@@ -556,7 +547,6 @@ GMRSET
 ; -----------------------------------------------------------------------------
             CLR.W   (SCRCYCCT)
             CLR.B   (PMOPTN)
-            MOVE.B #1,(PIPCOUNT)
             MOVE.W #5,(XSPEED)
             CLR.B   (UTLRNDIX)
             CLR.W   (PLRPOSX)
@@ -564,6 +554,17 @@ GMRSET
             CLR.W   (PLRSCORE)
             CLR.B   (PIPCYC)
             RTS   
+
+
+
+
+
+
+
+
+
+
+
 
 
 

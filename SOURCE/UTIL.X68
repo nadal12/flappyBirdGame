@@ -51,18 +51,6 @@ UTLFONT     MACRO
             TRAP    #15
             ENDM
 
-; -----------------------------------------------------------------------------
-UTLPLAY     MACRO
-; WRAPPER TO AUDIO FILE REPRODUCTION THROUGH STANDARD PLAYER
-; INPUT    - \1 REFERENCE NUMBER TO FILE IN MEMORY TO REPRODUCE
-; OUTPUT   - NONE
-; MODIFIES - D0-D1,A1
-; -----------------------------------------------------------------------------
-            MOVE.B  #\1,D1
-            MOVEQ   #72,D0
-            TRAP    #15
-            ENDM
-
 ; =============================================================================
 ; UTILITY SUBROUTINES
 ; =============================================================================
@@ -158,6 +146,82 @@ UTLRAND
             DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
+
+; -----------------------------------------------------------------------------
+UTLPLAY
+; WRAPPER TO AUDIO FILE REPRODUCTION THROUGH STANDARD PLAYER
+; ONLY PLAYS SOUND IF SNDSTA == $00
+; INPUT    - D1.B - NUM.REF. OF SOUND TO PLAY
+; OUTPUT   - NONE
+; MODIFIES - D0
+; -----------------------------------------------------------------------------
+            TST.B   (SNDSTA)        ; TEST IF SOUND SHOULD BE PLAYED
+            BNE.S   .END
+            
+            ;Guardar registros
+            MOVE.L D0,-(A7)
+            
+            MOVEQ   #72,D0          ; LOAD TASK NUMBER
+            TRAP    #15
+            
+            ;Restaurar registros
+            MOVE.L (A7)+,D0
+.END        RTS
+
+; -----------------------------------------------------------------------------
+UTLPLBG
+; SUBROUTINE TO BACKGROUND AUDIO FILE REPRODUCTION THROUGH STANDARD PLAYER-LOOP
+; ONLY PLAYS SOUND IF SNDSTA == $00
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - D0/D2
+; -----------------------------------------------------------------------------
+            TST.B   (SNDSTA)        ; TEST IF SOUND SHOULD BE PLAYED
+            MOVE.L  #$F,D7
+            BNE.S   .END
+            
+            ;Guardar registros
+            MOVEM.L D0-D2,-(A7)
+
+            MOVEQ   #76,D0          ; LOAD TASK NUMBER
+            MOVE.B  #BGSND,D1       ; LOAD SOUND NUM.REF.
+            MOVE.L  #1,D2           ; LOAD PLAYER OPTION
+            TRAP    #15
+            
+
+            ;MOVE.L  D0,D7
+            
+            ;Restaurar registros
+            MOVEM.L (A7)+,D0-D2
+.END        RTS
+
+; -----------------------------------------------------------------------------
+UTLSTBG
+; SUBROUTINE TO AUDIO FILE REPRODUCTION THROUGH STANDARD PLAYER
+; ONLY EXECUTES IF SNDSTA == $00
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - D0-D2
+; -----------------------------------------------------------------------------
+            TST.B   (SNDSTA)        ; TEST IF SOUND SHOULD BE PLAYED
+            BNE.S   .END
+            
+            ;Guardar registros
+            MOVEM.L D0-D2,-(A7)
+
+            MOVEQ   #76,D0          ; LOAD TASK NUMBER
+            MOVE.B  #BGSND,D1       ; LOAD SOUND NUM.REF.
+            MOVE.L  #2,D2           ; LOAD PLAYER OPTION
+            TRAP    #15
+            
+            ;Restaurar registros
+            MOVEM.L (A7)+,D0-D2
+.END        RTS
+
+
+
+
+
 
 
 

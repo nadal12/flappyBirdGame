@@ -3,8 +3,6 @@
 ; LOCAL MEMORY IS:
 ; +0 WORD X COORDINATE OF THE LEFTMOST EDGE OF THE VERTICALLY ALIGNED PIPES
 ; +2 WORD Y COORDINATE OF THE DOWNMOST EDGE OF THE TOP PIPE (FACING DOWN)
-; +4 WORD BOOLEAN THAT TELLS WHETHER THE PIPE SHOULD MOVE OR NOT
-;    (0 == TRUE. ELSE FALSE)
 ; =============================================================================
 
 ; -----------------------------------------------------------------------------
@@ -17,12 +15,6 @@ PIPINIT
             MOVE.W  #SCRWIDTH,(A0)      ;X COORDINATE OF STARTING POSITION
             JSR     UTLRAND             ;RANDOM Y COORDINATE OF STARTING
             MOVE.W  D0,2(A0)            *POSITION
-            CMP.B   #4,D1
-            BNE.S   .skip
-            
-            CLR.B   (PIPCOUNT)
-.skip            
-            MOVE.B  D1,4(A0)            ;BOOLEAN: MOVING OR NOT
         
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D1
@@ -41,10 +33,6 @@ PIPUPD
             CMP.W   #-PIPTWDT,(A0)
             BLE.S   .KILL
             
-*            CMP.B   #0,4(A0)       ;CHECK IF MOVING
-*            BNE.S   .END
-            
-            
 .END        ;Restaurar registros
             MOVE.L  (A7)+,D0
             RTS
@@ -59,16 +47,9 @@ PIPPLOT
             ;Guardar registros
             MOVEM.L D0-D4,-(A7)
             
+            ;Seleccionar colores de relleno y dibujado para tuberías.
             UTLSPEN #PIPPC
-            
-            CMP.B   #0,4(A0)
-            BEQ.S   .skip
-            
             UTLSFIL #PIPFC
-            BRA     .skp2
-.skip       
-            UTLSFIL #$00000000      ;prueba para pipes que se han de mover
-.skp2
             
             MOVE.W  (A0),D1         ;PAINT THE BASE OF THE TOP PIPE
             ADDQ    #PIPTBSPC,D1
@@ -115,6 +96,8 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
+
+
 
 
 

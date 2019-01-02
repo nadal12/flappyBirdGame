@@ -15,7 +15,7 @@ SNDINIT
             LEA         .PATHPTR,A0         ; LOAD POINTER TO POINTERS OF PATHS
             MOVEQ       #71,D0              ; LOAD TASK NUMBER
             MOVEQ       #BRDLNG1,D1         ; CARGAR EL MENOR NUM.REF. DE SND.
-            MOVEQ       #VICTSND,D2         ; CARGAR EL MAYOR NUM.REF. DE SND.
+            MOVEQ       #BGSND,D2         ; CARGAR EL MAYOR NUM.REF. DE SND.
             
 .LOOP       MOVEA.L     (A0)+,A1            ; CARGAR PATH A FICHERO DE SONIDO
             TRAP        #15     
@@ -36,9 +36,10 @@ SNDINIT
 .MNOPTSD    DC.B    'MEDIA/menu-move-sound.wav',0
 .PNCHSND    DC.B    'MEDIA/punch-sound.wav',0
 .VICTSND    DC.B    'MEDIA/win-sound.wav',0
+.BGSND      DC.B    'MEDIA/background-music.wav',0
             DS.W    0
 .PATHPTR    DC.L    .BRDLNG1,.BRDLNG2,.BRDSHRT,.FLAPSND,.GOVRSND,.MNOPTSD
-            DC.L    .PNCHSND,.VICTSND,0
+            DC.L    .PNCHSND,.VICTSND,.BGSND,0
             
 ; -----------------------------------------------------------------------------
 SNDUPD
@@ -48,34 +49,27 @@ SNDUPD
 ; MODIFIES  - D0-D1
 ; -----------------------------------------------------------------------------
         ;Guardar registros
-        MOVEM.L     D0-D1,-(A7)
+        MOVE.L     D0,-(A7)
         
-        TST.B       (SNDSTA)            ; CHECK IF SOUND IS ON
+        TST.B       (BGSND)            ; CHECK IF SOUND IS ON
         BNE.S       .END
         
-        MOVE.W      (SCRCYCCT),D0
-        AND.W       #$FFFF,D0          ; EVERY 512 CYCLES BRANCH
-        BNE.S       .END
-        
-        BTST        #0,(UTLRNDIX)      ; PLAY SOUND EVERY SECOND SET OF 512 CYC
-        BNE.S       .END
-        
-        JSR         UTLRAND
-        BTST        #0,D0
-        BEQ.S       .BSND2
-        
-        TST.B       (SNDSTA)            ; CHECK IF SOUND IS ON
-        BNE.S       .END
-        
-        UTLPLAY     BRDLNG1
-        BRA         .END
-.BSND2
-        UTLPLAY     BRDLNG2
+        MOVE.B      (SCRCYCCT),D0
+        AND.B       #$3F,D0            ; AFTER 64 CYCLES PLAY BG MUSIC
+        BNE.S      .END
+        JSR         UTLPLBG
 
 .END    ;Restaurar registros
-        MOVEM.L     (A7)+,D0-D1
+        MOVE.L     (A7)+,D0
         RTS
             
+
+
+
+
+
+
+
 
 
 

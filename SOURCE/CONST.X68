@@ -133,6 +133,8 @@ GOVRSND     EQU     4                       ; SOUND NUM.REF. FOR GAME OVER
 MNOPTSD     EQU     5                       ; SOUND NUM.REF. FOR MOVING IN MENU
 PNCHSND     EQU     6                       ; SOUND NUM.REF. FOR PUNCH SOUND
 VICTSND     EQU     7                       ; SOUND NUM.REF. FOR NEW HIGH SCORE
+BGSND       EQU     8                       ; SOUND NUM.REF. FOR BACKGROUND SND
+
 
 
 

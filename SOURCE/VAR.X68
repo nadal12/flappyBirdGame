@@ -15,26 +15,32 @@ PLRENER     DS.W    1                       ; PLAYER ENERGY
 PLRSCORE    DS.W    1                       ; PLAYER SCORE
 PLRDMG      DS.B    1                       ; BIT0: UPD DAMAGE, BIT1 PLOT DMG
             DS.W    0
-            
-; --- PIPE RELATED VARIABLES --------------------------------------------------
-
-PIPCOUNT    DC.B    1
-            DS.W    0
 
 ; --- GAME RELATED VARIABLES --------------------------------------------------
 
 XSPEED      DC.W    5                       ; HORIZONTAL SPEED OF OBJECTS
 SNDSTA      DC.B    0                       ; SOUND STATE
 PIPCYC      DS.B    1                       ; SPAWN PIPES EVERY PIPCYC CYCLES
+GSSCYC      DS.B    1                       ; SPAWN GRASS DETAILS EVERY GSSCYC
 
-; --- PAUSE MENU RELATED VARIABLES -------------------------------------------
+; --- PAUSE MENU RELATED VARIABLES --------------------------------------------
 
 PMOPTN      DC.B    0                       ; OPTION ON THE MENU TO BE CHOSEN
 
-; --- UTILITY VARIABLES ------------------------------------------------------
+
+; --- SOUND RELATED VARIABLES -------------------------------------------------
+
+BGSNDINIT   DC.B    0                       ; TO PLAY OR NOT TO PLAY BGSND
+
+; --- UTILITY VARIABLES -------------------------------------------------------
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
+
+
+
+
 
 
 
