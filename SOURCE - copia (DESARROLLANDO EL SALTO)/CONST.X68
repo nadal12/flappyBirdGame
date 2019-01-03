@@ -57,8 +57,8 @@ PLRCOLOR        EQU GREEN                   ;PLAYER COLOR
 PLREYECOLOR     EQU WHITE                   ;PLAYER EYE COLOR
 PLRIRISCOLOR    EQU BLACK                   ;PLAYER IRIS COLOR
 PLRMOUTHCOLOR   EQU RED                     ;PLAYER MOUTH COLOR
-PLRWIDTH        EQU 30                      ;PLAYER WIDTH
-PLRHEIGHT       EQU 30                      ;PLAYER HEIGHT
+PLRWIDTH        EQU 25                      ;PLAYER WIDTH
+PLRHEIGHT       EQU 25                      ;PLAYER HEIGHT
 PLRINITPOSX     EQU 150                     ;INITIAL POSITION OF THE PLAYER (X)
 PLRINITPOSY     EQU 180                     ;INITIAL POSITION OF THE PLAYER (Y)
 JUMPSIZE        EQU 60                      ;JUMP SIZE
@@ -72,7 +72,7 @@ PIPBWDT     EQU     50                      ; PIPE BASE WIDTH
 PIPTWDT     EQU     60                      ; PIPE MOUTH WIDTH
 PIPTHGT     EQU     10                      ; PIPE MOUTH HEIGHT
 PIPTBSPC    EQU     ((PIPTWDT-PIPBWDT)/2)   ; DIF.BETW. OUTER RAD. & IN. RAD
-PIPOPEN     EQU     80                      ; SPACE BETW. TOP AND BOTTOM PIPES
+PIPOPEN     EQU     100                      ; SPACE BETW. TOP AND BOTTOM PIPES
 PIPYSPD     EQU     2                       ; SPEED @ WHICH PIPES GO UP&DOWN
 
 ; --- CLOUD RELATED CONSTANTS -------------------------------------------------
@@ -104,6 +104,7 @@ PAUSELC     EQU     $000000FF               ; SELECTED OPTION COLOUR
 GOVSTRX     EQU     35                      ; TITLE X COORDINATE
 GOVSTRY     EQU     15                      ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
+
 
 
 

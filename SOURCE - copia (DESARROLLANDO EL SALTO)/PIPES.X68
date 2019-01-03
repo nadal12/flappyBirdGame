@@ -56,13 +56,17 @@ PIPUPD
             MOVE.W #PLRHEIGHT, D7
             JSR UTLCHCOL           
             
+            TST.B D0
+            BEQ .END
+            MOVE.W #1, (PLRDEAD)
+            
 .END        ;Restaurar registros
             MOVEM.L  (A7)+,D0-D7
             RTS
             
 .KILL       JSR     AGLKILL
             BRA.S  .END
-            
+
 ; -----------------------------------------------------------------------------
 PIPPLOT
 ; PIPE PLOT
@@ -126,6 +130,8 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
+
+
 
 
 

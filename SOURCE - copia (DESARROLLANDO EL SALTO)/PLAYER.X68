@@ -15,6 +15,7 @@ PLRINIT
         MOVE.W #PLRINITPOSY,(MAXPOS)
         MOVE.W #0, (UPPRESSED)
         MOVE.W #1, (PLRDOWNSPEED)
+        CLR    (PLRSCORE)
         CLR    (PLRDEAD)               ;Poner a 0 PLRDEAD (Jugador vivo).
 
         RTS
@@ -96,7 +97,6 @@ PLRUPD
           BRA .END         
                  
 .END
-          
           MOVEM.L (A7)+,D0/D1/D2/D3
           RTS
           
@@ -109,7 +109,15 @@ PLRPLOT
 ; -----------------------------------------------------------------------------
 
             MOVEM.L D0-D5,-(A7)
-
+            
+            ;-------SCORE----------------
+            
+            MOVE #17, D0
+            LEA PLRSCORETEXT, A1
+            MOVE.L (PLRSCORE), D1
+            TRAP #15
+                    
+            ;-------PLAYER (BODY)--------
 
             ;SET PLAYER COLOR 
             MOVE.L  #PLRCOLOR,D1
@@ -135,118 +143,65 @@ PLRPLOT
             MOVE.B  #87,D0
             TRAP    #15
             
-            ;---------EYE---------
+            ;---------EYE (IRIS)---------
                              
             ;SET EYE COLOR
             MOVE.L  #81, D0
-            MOVE.L  #PLREYECOLOR, D1
+            MOVE.L  #PLRIRISCOLOR, D1
             TRAP    #15
             
             MOVE.W  PLRPOSX,D1   
             
-            ;EYE WIDTH         
-            ADD.W   #PLRWIDTH-25,D1
+            ;X0        
+            ADD.W   #PLRWIDTH/3,D1
             MOVE.W  (PLRPOSX),D3
             
-            ;EYE POSX
-            ADD.W   #PLRWIDTH-10,D3
+            ;X2
+            ADD.W   #PLRWIDTH/2,D3
             MOVE.W (PLRPOSY),D2
             
-            ;EYE POSY
-            ADD.W   #PLRHEIGHT/2-5,D2
+            ;X1
+            ADD.W   #PLRHEIGHT/4,D2
             MOVE.W  (PLRPOSY),D4
-           
-            ;EYE HEIGHT 
-            ADD.W   #PLRHEIGHT/2-25,D4
+            
+            
+            ;X3
+            ADD.W   #PLRHEIGHT/20,D4
             MOVE.B  #88,D0
             TRAP    #15
-            
-*            ;---------EYE (IRIS)------
-*                              
-*            ;SET EYE COLOR
-*            MOVE.L  #81, D0
-*            MOVE.L  PLRIRISCOLOR, D1
-*            TRAP    #15            
-*          
-*            MOVE.W  (PLRPOSX),D1   
-*            
-*            ;EYE WIDTH         
-*            ADD.W   #PLRWIDTH-15,D1
-*            MOVE.W  (PLRPOSX),D3
-*            
-*            ;EYE POSX
-*            ADD.W   #PLRWIDTH-20,D3
-*            MOVE.W  (PLRPOSY),D2
-*            
-*            ;EYE POSY
-*            ADD.W   #PLRHEIGHT/2-18,D2
-*            MOVE.W  (PLRPOSX),D4
-*           
-*            ;EYE HEIGHT 
-*            MOVE.L  #3,D4
-*            MOVE.B  #88,D0
-*            TRAP    #15
             
            ;---------MOUTH------
                                
             ;SET MOUTH COLOR
             MOVE.L  #81, D0
             MOVE.L  #RED, D1
-            TRAP    #15
-*    
-*            MOVE.W  (PLRPOSX),D1  
-*            MOVE.W  (PLRPOSY),D2   
-*            MOVE.W  (PLRPOSX),D3   
-*            MOVE.W  (PLRPOSY),D4   
-*
-*            
-*            ;MOUTH POSX (RESPECT PLRWIDTH)         
-*            ADD.W   #PLRWIDTH/2,D1
-*            
-*            ;MOUTH POSY (RESPECT PLRHEIGHT)
-*            ADD.W   #PLRHEIGHT/2,D2
-*            
-*            ;MOUTH POSX
-*            ADD.W   ,D3
-*   
-*            ;MOUTH HEIGHT 
-*            ADD.W   #PLRHEIGHT,D4
-*            
-*            ;LLAMADA AL TRAP (DIBUJADO)
-*            MOVE.B  #88,D0
-*            TRAP    #15
-            
+            TRAP    #15           
                
             MOVE.W  (PLRPOSX),D1   
             
-            ;EYE WIDTH         
-            ADD.W   #PLRWIDTH-1,D1
+            ;X0        
+            ADD.W   #PLRWIDTH-5,D1
             MOVE.W  (PLRPOSX),D3
+           
             
-            ;EYE POSX
-            ADD.W   #PLRWIDTH-20,D3
+            ;X2
+            ADD.W   #PLRWIDTH/2,D3
             MOVE.W  (PLRPOSY),D2
             
-            ;EYE POSY
-            ADD.W   #PLRHEIGHT-5,D2
-            MOVE.W  (PLRPOSY),D4
+  
+            ;X1
+            ADD.W   #PLRHEIGHT/2,D2
+            MOVE.W  (PLRPOSY),D4   
+            
+            ;X3 
+            ADD.W   #PLRHEIGHT,D4
            
-            ;EYE HEIGHT 
-            ADD.W   #PLRHEIGHT-15,D4
             MOVE.B  #88,D0
             TRAP    #15
-            
-
             
             MOVEM.L (A7)+,D0-D5
             
             RTS
-
-
-
-
-
-
 
 *~Font name~Courier New~
 *~Font size~11~
