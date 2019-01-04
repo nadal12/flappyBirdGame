@@ -15,7 +15,7 @@ PLRINIT
         MOVE.W #PLRINITPOSY,(MAXPOS)
         MOVE.W #0, (UPPRESSED)
         MOVE.W #1, (PLRDOWNSPEED)
-        MOVE.L #0, (PLRSCORE)
+        MOVE.L #0, (PLRSCORE)              ;Inicializar score
         MOVE.L #0, (PLRDEAD)               ;Poner a 0 PLRDEAD (Jugador vivo).
 
         RTS
@@ -110,27 +110,25 @@ PLRPLOT
 
             MOVEM.L D0-D5,-(A7)
             
-            ;-------SCORE----------------
+            ;-------SCORE----------------      
+                                 
+            ;Set background color. 
+            MOVE.L  #81, D0
+            MOVE.L  #BLACK, D1
+            TRAP    #15                
             
-*            ;Set position
-*            MOVE.W #11, D0
-*            MOVE.W #$9950, D1
-*            TRAP #15
-
-*            LEA     .SCORESTR,A1
-*            CLR.L   D1
-*            MOVE.W  (PLRSCORE),D1
-*            MOVE.B  #17,D0
-*            TRAP    #15
-*            MOVEM.L (A7)+,D0-D4
-*            RTS
-*.SCORESTR   DC.B    'SCORE: ',0
-
-
+            ;Set font properties.
+            
+            MOVE.L  #21, D0
+            MOVE.L  #WHITE, D1
+            CLR.L   D2
+            TRAP    #15 
+            
             ;Print score
-            MOVE.W #17, D0
-            LEA PLRSCORETEXT, A1
-            ;MOVE.W (PLRSCORE), D1
+            MOVE #17, D0
+            LEA PLRSCORETEXT,A1
+            MOVE.L #0, D1
+            MOVE.L (PLRSCORE), D1
             TRAP #15
                     
             ;-------PLAYER (BODY)--------
@@ -217,6 +215,7 @@ PLRPLOT
             MOVEM.L (A7)+,D0-D5
             
             RTS
+
 
 
 

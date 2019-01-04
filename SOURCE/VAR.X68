@@ -15,8 +15,8 @@ MAXPOS       DS.W    1                       ; JUMP MAX POSITION
 UPPRESSED    DS.W    1                       ; 1 IF UP PRESSED, 0 IF NO PRESSED
 PLRDOWNSPEED DS.W    1                       ; PLAYER DOWN SPEED
 PLRDEAD      DS.W    1                       ; PLAYER DEAD
-PLRSCORE     DS.W    1                       ; PLAYER SCORE
-PLRSCORETEXT DC.W    'SCORE: ',0             ; SCORE TEXT
+PLRSCORE     DS.L    1                       ; PLAYER SCORE
+PLRSCORETEXT DC.B    'SCORE: ',0             ; SCORE TEXT
              DS.W    0
 
 

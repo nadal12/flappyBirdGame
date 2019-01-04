@@ -121,7 +121,7 @@ PIPBWDT     EQU     50                      ; PIPE BASE WIDTH
 PIPTWDT     EQU     60                      ; PIPE MOUTH WIDTH
 PIPTHGT     EQU     10                      ; PIPE MOUTH HEIGHT
 PIPTBSPC    EQU     ((PIPTWDT-PIPBWDT)/2)   ; DIF.BETW. OUTER RAD. & IN. RAD
-PIPOPEN     EQU     90                      ; SPACE BETW. TOP AND BOTTOM PIPES
+PIPOPEN     EQU     120                      ; SPACE BETW. TOP AND BOTTOM PIPES
 
 ; --- CLOUD RELATED CONSTANTS -------------------------------------------------
 
@@ -157,6 +157,8 @@ PAUHLPY2    EQU     30                      ; HELP TEXT 2 Y COORD.
 
 GOVSTRX     EQU     13                      ; TITLE X COORDINATE
 GOVSTRY     EQU     6                       ; TITLE Y COORDINATE
+FINALSCOREX EQU     10                      ; TITLE X COORDINATE
+FINALSCOREY EQU     8                       ; TITLE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
 GOVSTRF     EQU     $01130001               ; TITLE FONT
 
@@ -174,7 +176,9 @@ BGSND       EQU     6                       ; SOUND NUM.REF. FOR BACKGROUND SND
 
 PSHFNT      EQU     $011A0001               ; FONT THAT PUSHES TITLES & ETC UP
 
-
+; --- OTHER CONSTANTS ---------------------------------------------------------
+CR          EQU $0D                         ;CARRIAGE RETURN
+LF          EQU $0A                         ;LINE FEED
 
 
 

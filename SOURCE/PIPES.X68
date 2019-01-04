@@ -3,6 +3,7 @@
 ; LOCAL MEMORY IS:
 ; +0 WORD X COORDINATE OF THE LEFTMOST EDGE OF THE VERTICALLY ALIGNED PIPES
 ; +2 WORD Y COORDINATE OF THE DOWNMOST EDGE OF THE TOP PIPE (FACING DOWN)
+; +4 WORD BOOLEAN THAT TELLS WHETHER THE PIPE SHOULD BE IGNORED OR NOT.
 ; =============================================================================
 
 ; -----------------------------------------------------------------------------
@@ -15,7 +16,7 @@ PIPINIT
             MOVE.W  #SCRWIDTH,(A0)      ;X COORDINATE OF STARTING POSITION
             JSR     UTLRAND             ;RANDOM Y COORDINATE OF STARTING
             MOVE.W  D0,2(A0)            *POSITION
-        
+            CLR.W   4(A0)
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D1
             RTS
@@ -33,6 +34,8 @@ PIPUPD
             CMP.W   #-PIPTWDT,(A0)
             BLE.S   .KILL
             
+            CMP.W #1, 4(A0)
+            BEQ .END            
             ;Preparar los registros para llamar a la subrutina que comprueba 
             ;las colisiones con las tuberías. 
             MOVE.W (A0), D0
@@ -45,10 +48,17 @@ PIPUPD
             MOVE.W #PLRHEIGHT, D7
             JSR UTLCHCOL           
             
+            CMP #2, D0
+            BEQ .IGNPIPE
+            
             TST.B D0
             BEQ .END
             MOVE.W #1, (PLRDEAD)
-            
+            BRA .END
+.IGNPIPE
+            MOVE.W #1, 4(A0)
+            ADD.L #1, (PLRSCORE)
+                       
 .END        ;Restaurar registros
             MOVE.L  (A7)+,D0
             RTS
@@ -112,6 +122,7 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
+
 
 
 

@@ -84,7 +84,7 @@ UTLCHCOL
             
             ADD.W D0, D4 ;Pared derecha de la tubería.
             CMP D2, D4
-            BCS .NOCOL
+            BCS .NOCOLIGNPIPE
             
             ;Comprobar si el pájaro ha alcanzado la tubería.
             
@@ -110,7 +110,12 @@ UTLCHCOL
 
 .NOCOL                    
             MOVE.W #0, D0
-
+            BRA .END
+            
+.NOCOLIGNPIPE
+            
+            MOVE.W #2, D0
+            
 .END          
             MOVEM.W (A7)+,D2/D4/D6/D7
             RTS
@@ -233,6 +238,7 @@ UTLSTBG
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D2
 .END        RTS
+
 
 
 
