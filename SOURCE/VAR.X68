@@ -23,7 +23,7 @@ SNDSTA      DC.B    0                       ; SOUND STATE
 PIPCYC      DS.B    1                       ; SPAWN PIPES EVERY PIPCYC CYCLES
 GSSCYC      DS.B    1                       ; SPAWN GRASS DETAILS EVERY GSSCYC
 
-; --- PAUSE MENU RELATED VARIABLES --------------------------------------------
+; --- MENUS RELATED VARIABLES --------------------------------------------
 
 PMOPTN      DC.B    0                       ; OPTION ON THE MENU TO BE CHOSEN
 
@@ -36,6 +36,7 @@ BGSNDINIT   DC.B    0                       ; TO PLAY OR NOT TO PLAY BGSND
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
 
 
 

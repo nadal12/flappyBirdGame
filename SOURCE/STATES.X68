@@ -21,6 +21,7 @@ STAUPD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.L D0/A0,-(A7)
+            CLR.W   D7  
             CLR.L   D0
             MOVE.W  (STANEXT),D0
             CMP.W   (STACUR),D0
@@ -38,8 +39,8 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAPLAYI,STAPAUI,STAEMPTY
-.UPDTBL     DC.L    STAINTRU,STAPLAYU,STAPAUU,STAGOVRU
+.INITBL     DC.L    STAINTRI,STAEMPTY,STAPLAYI,STAPAUI,STAEMPTY
+.UPDTBL     DC.L    STAINTRU,STAINSTU,STAPLAYU,STAPAUU,STAGOVRU
 
 ; -----------------------------------------------------------------------------
 STAPLOT
@@ -57,7 +58,7 @@ STAPLOT
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.PLTTBL     DC.L    STAINTRP,STAPLAYP,STAPAUP,STAGOVRP
+.PLTTBL     DC.L    STAINTRP,STAINSTP,STAPLAYP,STAPAUP,STAGOVRP
 
 ; -----------------------------------------------------------------------------
 STAEMPTY
@@ -79,6 +80,8 @@ STAPLAYI
 ; -----------------------------------------------------------------------------
             ;Guardar registros
             MOVE.L  D0,-(A7)
+            
+            CLR.B   (BGSNDINIT)
             
             MOVE.W  (XSPEED),D0         ; CHECK DIFFICULTY CHOSEN TO ADAPT
             CMP.W   #INTOESY,D0         ; BRANCH IF CHOSEN EASY MODE
@@ -157,8 +160,13 @@ GMRSET
 ;   INCLUDES
 ; -----------------------------------------------------------------------------
             INCLUDE "STATES/INTRO_SCREEN.X68"
+            INCLUDE "STATES/INSTR_SCREEN.X68"
             INCLUDE "STATES/PAUSE_SCREEN.X68"
             INCLUDE "STATES/GOVR_SCREEN.X68"
+
+
+
+
 
 
 

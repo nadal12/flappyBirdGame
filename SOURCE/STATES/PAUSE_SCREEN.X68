@@ -10,6 +10,7 @@ STAPAUI
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             ;Guardar estado de juego en registros
+            ;CLR.B   (PMOPTN)
             MOVE.B  (SCRCYCCT),D1                 ;Guardar numero de ciclos de
                                                   ;pantalla: -> restaurar luego
             RTS
@@ -22,8 +23,6 @@ STAPAUU
 ; -----------------------------------------------------------------------------
             ;Guardar registros
             MOVEM.L  D0-D1,-(A7)
-
-            CLR.B   (BGSNDINIT)             ;Reinicia musica en BG al pausar
 
             BTST.B  #KBDBITUP,(KBDEDGE)     ;Check cambio en estado de UP
             BNE.S   .UP
@@ -239,7 +238,7 @@ STAPAUP
             
                         
             ;Cambiar fuente de texto para ajustar altura de titulo
-            UTLFONT INTPRSC,INTPRSF
+            UTLFONT 00000000,PSHFNT
             
             ;Restaurar registros
             MOVEM.L (A7)+,D0/A1
@@ -255,6 +254,11 @@ STAPAUP
 .HLP1       DC.B    'Presione UP o DOWN para moverse por el menú',0
 .HLP2       DC.B    'Presione SPACE para seleccionar',0
             DS.W    0
+
+
+
+
+
 
 
 
