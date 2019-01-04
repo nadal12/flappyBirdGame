@@ -15,8 +15,8 @@ PLRINIT
         MOVE.W #PLRINITPOSY,(MAXPOS)
         MOVE.W #0, (UPPRESSED)
         MOVE.W #1, (PLRDOWNSPEED)
-        CLR    (PLRSCORE)
-        CLR    (PLRDEAD)               ;Poner a 0 PLRDEAD (Jugador vivo).
+        MOVE.L #0, (PLRSCORE)
+        MOVE.L #0, (PLRDEAD)               ;Poner a 0 PLRDEAD (Jugador vivo).
 
         RTS
 ; -----------------------------------------------------------------------------
@@ -111,7 +111,7 @@ PLRPLOT
             MOVEM.L D0-D5,-(A7)
             
             ;-------SCORE----------------
-            
+            MOVE.L #0, D0
             MOVE #17, D0
             LEA PLRSCORETEXT, A1
             MOVE.L (PLRSCORE), D1
@@ -137,7 +137,6 @@ PLRPLOT
             ADD.W   #PLRHEIGHT,D4
             MOVE.B  #88,D0
             TRAP    #15
-            
             
             SUB.W   #PLRWIDTH/2,D3
             MOVE.B  #87,D0
@@ -202,6 +201,7 @@ PLRPLOT
             MOVEM.L (A7)+,D0-D5
             
             RTS
+
 
 *~Font name~Courier New~
 *~Font size~11~
