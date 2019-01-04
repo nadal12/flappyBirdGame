@@ -16,7 +16,7 @@ UPPRESSED    DS.W    1                       ; 1 IF UP PRESSED, 0 IF NO PRESSED
 PLRDOWNSPEED DS.W    1                       ; PLAYER DOWN SPEED
 PLRDEAD      DS.W    1                       ; PLAYER DEAD
 PLRSCORE     DS.W    1                       ; PLAYER SCORE
-PLRSCORETEXT DC.B    'SCORE: ',0             ; SCORE TEXT
+PLRSCORETEXT DC.W    'SCORE: ',0             ; SCORE TEXT
              DS.W    0
 
 
@@ -40,6 +40,7 @@ BGSNDINIT   DC.B    0                       ; TO PLAY OR NOT TO PLAY BGSND
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
 
 
 

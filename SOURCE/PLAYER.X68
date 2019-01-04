@@ -111,10 +111,26 @@ PLRPLOT
             MOVEM.L D0-D5,-(A7)
             
             ;-------SCORE----------------
-            MOVE.L #0, D0
-            MOVE #17, D0
+            
+*            ;Set position
+*            MOVE.W #11, D0
+*            MOVE.W #$9950, D1
+*            TRAP #15
+
+*            LEA     .SCORESTR,A1
+*            CLR.L   D1
+*            MOVE.W  (PLRSCORE),D1
+*            MOVE.B  #17,D0
+*            TRAP    #15
+*            MOVEM.L (A7)+,D0-D4
+*            RTS
+*.SCORESTR   DC.B    'SCORE: ',0
+
+
+            ;Print score
+            MOVE.W #17, D0
             LEA PLRSCORETEXT, A1
-            MOVE.L (PLRSCORE), D1
+            ;MOVE.W (PLRSCORE), D1
             TRAP #15
                     
             ;-------PLAYER (BODY)--------
@@ -201,6 +217,8 @@ PLRPLOT
             MOVEM.L (A7)+,D0-D5
             
             RTS
+
+
 
 
 *~Font name~Courier New~
