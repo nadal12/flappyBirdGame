@@ -16,24 +16,27 @@ UPPRESSED    DS.W    1                       ; 1 IF UP PRESSED, 0 IF NO PRESSED
 PLRDOWNSPEED DS.W    1                       ; PLAYER DOWN SPEED
 PLRDEAD      DS.W    1                       ; PLAYER DEAD
 PLRSCORE     DS.W    1                       ; PLAYER SCORE
-PLRSCORETEXT DC.W    'SCORE: ',0             ; SCORE TEXT
+PLRSCORETEXT DC.B    'SCORE: ',0             ; SCORE TEXT
              DS.W    0
-            
-; --- PIPE RELATED VARIABLES --------------------------------------------------
 
-PIPCOUNT    DC.B    1
-PIPEPOSX    DC.W    1
-            DS.W    0
 
 ; --- GAME RELATED VARIABLES --------------------------------------------------
 
-XSPEED      DC.W    5                       ;HORIZONTAL SPEED OF OBJECTS
+XSPEED      DC.W    5                       ; HORIZONTAL SPEED OF OBJECTS
+SNDSTA      DC.B    0                       ; SOUND STATE
+PIPCYC      DS.B    1                       ; SPAWN PIPES EVERY PIPCYC CYCLES
+GSSCYC      DS.B    1                       ; SPAWN GRASS DETAILS EVERY GSSCYC
 
-; --- PAUSE MENU RELATED VARIABLES -------------------------------------------
+; --- MENUS RELATED VARIABLES --------------------------------------------
 
-PMOPTN      DC.B    0                       ;OPTION ON THE MENU TO BE CHOSEN
+PMOPTN      DC.B    0                       ; OPTION ON THE MENU TO BE CHOSEN
 
-; --- UTILITY VARIABLES ------------------------------------------------------
+
+; --- SOUND RELATED VARIABLES -------------------------------------------------
+
+BGSNDINIT   DC.B    0                       ; TO PLAY OR NOT TO PLAY BGSND
+
+; --- UTILITY VARIABLES -------------------------------------------------------
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0

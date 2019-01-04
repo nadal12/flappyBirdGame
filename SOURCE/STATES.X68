@@ -21,6 +21,7 @@ STAUPD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.L D0/A0,-(A7)
+            CLR.W   D7  
             CLR.L   D0
             MOVE.W  (STANEXT),D0
             CMP.W   (STACUR),D0
@@ -38,8 +39,8 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAEMPTY,STAEMPTY
-.UPDTBL     DC.L    STAINTRU,STAPLAYU,STAGOVRU
+.INITBL     DC.L    STAINTRI,STAEMPTY,STAPLAYI,STAPAUI,STAEMPTY
+.UPDTBL     DC.L    STAINTRU,STAINSTU,STAPLAYU,STAPAUU,STAGOVRU
 
 ; -----------------------------------------------------------------------------
 STAPLOT
@@ -57,7 +58,7 @@ STAPLOT
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.PLTTBL     DC.L    STAINTRP,STAPLAYP,STAGOVRP
+.PLTTBL     DC.L    STAINTRP,STAINSTP,STAPLAYP,STAPAUP,STAGOVRP
 
 ; -----------------------------------------------------------------------------
 STAEMPTY
@@ -70,14 +71,40 @@ STAEMPTY
             RTS
 
 ; -----------------------------------------------------------------------------
-;STAPLAYI    EQU     PLRINIT
+STAPLAYI
 ; PLAY STATE INITIALIZATION.
+; SETS THE RIGHT CYCLE CO
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
-; NOTE     - JUST A WRAPPER FOR PLRINIT
 ; -----------------------------------------------------------------------------
-
+            ;Guardar registros
+            MOVE.L  D0,-(A7)
+            
+            CLR.B   (BGSNDINIT)
+            
+            MOVE.W  (XSPEED),D0         ; CHECK DIFFICULTY CHOSEN TO ADAPT
+            CMP.W   #INTOESY,D0         ; BRANCH IF CHOSEN EASY MODE
+            BEQ.S   .EASY
+            CMP.W   #INTOHRD,D0         ; BRANCH IF CHOSEN HARD MODE
+            BEQ.S   .HARD
+            
+            MOVE.B  #GPIPCNRM,(PIPCYC)  ; NORMAL MODE SELECTED
+            MOVE.B  #GGSSCNRM,(GSSCYC)
+            
+.END        JSR     PLRINIT
+            
+            ;Restaurar registros
+            MOVE.L  (A7)+,D0
+            RTS
+.EASY   
+            MOVE.B  #GPIPCESY,(PIPCYC)  ; EASY MODE SELECTED
+            MOVE.B  #GGSSCESY,(GSSCYC)
+            BRA.S   .END
+.HARD
+            MOVE.B  #GPIPCHRD,(PIPCYC)  ; HARD MODE SELECTED
+            MOVE.B  #GGSSCHRD,(GSSCYC)
+            BRA.S   .END
 ; -----------------------------------------------------------------------------
 STAPLAYU
 ; PLAY STATE UPDATE
@@ -85,12 +112,19 @@ STAPLAYU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-*            JSR     PLRUPD
+            BTST.B   #KBDBITPS,(KBDEDGE)         ;Si 'P' es presionado, pausa.
+            BNE.S   .PAUSE
+            
+            JSR     PLRUPD
+            JSR     SNDUPD
             JSR     BGUPD
             JSR     PRPUPD
             JSR     SPWUPD
             BRA     AGLUPD
-
+.PAUSE      
+            JSR     UTLSTBG
+            MOVE.W  #STAPAU,(STANEXT)
+            RTS
 ; -----------------------------------------------------------------------------
 STAPLAYP
 ; PLAY STATE PLOT
@@ -100,100 +134,34 @@ STAPLAYP
 ; -----------------------------------------------------------------------------
             JSR     BGPLOT
             JSR     PRPPLOT
-            ;JSR     AGLPLOT
-            BRA     AGLPLOT
-            ;BRA     PLRPLOT
-
+            JSR     AGLPLOT
+            BRA     PLRPLOT
 ; -----------------------------------------------------------------------------
-STAINTRI    EQU     DMMINIT
-; INTRO STATE INIT
+GMRSET
+; RESET GAME VARIABLES TO THEIR INITIAL STATE
 ; INPUT    - NONE
 ; OUTPUT   - NONE
-; MODIFIES - NONE
-; NOTE     - JUST A WRAPPER FOR DMMINIT TO RELEASE ALL MEMORY
+; MODIFIES - GAME VARIABLES (@ VAR.X68 & SOME OF SYSVAR.X68) 
 ; -----------------------------------------------------------------------------
-
-; -----------------------------------------------------------------------------
-STAINTRU
-; INTRO STATE UPDATE
-; INPUT    - NONE
-; OUTPUT   - NONE
-; MODIFIES - NONE
-; -----------------------------------------------------------------------------
-            BTST.B  #KBDBITF1,(KBDEDGE)
-            BEQ     .END
-            MOVE.W  #STAPLAY,(STANEXT)
-.END        RTS
-
-; -----------------------------------------------------------------------------
-STAINTRP
-; INTRO STATE PLOT
-; INPUT    - NONE
-; OUTPUT   - NONE
-; MODIFIES - NONE
-; -----------------------------------------------------------------------------
-            ;Guardar registros en pila
-            MOVEM.L A1/D0-D1,-(A7)
-            
-            ;Seleccionar fuente de texto
-            UTLFONT INTTITC,INTTITF
-            ;Seleccionar posicion de texto      
-            UTLLOCT INTTITX,INTTITY               
-
-            LEA     .TITLE,A1
-            MOVE.B  #14,D0
-            TRAP    #15
-            
-            ;Seleccionar fuente de texto
-            UTLFONT INTPRSC,INTPRSF     
-            ;Seleccionar posicion de texto
-            UTLLOCT INTPRSX,INTPRSY     
-
-            LEA     .START_TEXT,A1
-            MOVE.B  #14,D0
-            TRAP    #15
-            
-            ;Restaurar registros
-            MOVEM.L (A7)+,A1/D0-D1
+            CLR.W   (SCRCYCCT)
+            CLR.B   (PMOPTN)
+            CLR.B   (BGSNDINIT)
+            MOVE.W  #5,(XSPEED)
+            CLR.B   (UTLRNDIX)
+            CLR.W   (PLRPOSX)
+            CLR.W   (PLRPOSY)
+            CLR.W   (PLRSCORE)
+            CLR.B   (PIPCYC)
+            CLR.B   (GSSCYC)
             RTS
 
-.TITLE      DC.B    'FLAPPY BIRD',0 
-.START_TEXT DC.B    'PRESS SPACE TO START',0
-            DS.W    0
-
 ; -----------------------------------------------------------------------------
-STAGOVRU
-; GAME OVER STATE UPDATE
-; INPUT    - NONE
-; OUTPUT   - NONE
-; MODIFIES - NONE
+;   INCLUDES
 ; -----------------------------------------------------------------------------
-            BTST.B  #KBDBITF1,(KBDEDGE)
-            BEQ     .END
-            MOVE.W  #STAINTR,(STANEXT)
-.END        RTS
-
-; -----------------------------------------------------------------------------
-STAGOVRP
-; GAME OVER STATE PLOT
-; INPUT    - NONE
-; OUTPUT   - NONE
-; MODIFIES - NONE
-; -----------------------------------------------------------------------------
-            MOVEM.L A1/D0-D1,-(A7)
-            UTLLOCT GOVSTRX,GOVSTRY
-            UTLSPEN #GOVSTRC
-            UTLSFIL #$00000000
-            LEA     .GOVSTR,A1
-            MOVE.B  #14,D0
-            TRAP    #15
-            MOVEM.L (A7)+,A1/D0-D1
-            RTS
-
-.GOVSTR     DC.B    'GAME  OVER',0
-            DS.W    0
-
-
+            INCLUDE "STATES/INTRO_SCREEN.X68"
+            INCLUDE "STATES/INSTR_SCREEN.X68"
+            INCLUDE "STATES/PAUSE_SCREEN.X68"
+            INCLUDE "STATES/GOVR_SCREEN.X68"
 
 
 

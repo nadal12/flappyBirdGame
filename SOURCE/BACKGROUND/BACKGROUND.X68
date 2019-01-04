@@ -13,7 +13,7 @@ BGUPD
             MOVEM.L  D0/A1-A3,-(A7)
 
             MOVE.B  (SCRCYCCT),D0
-            AND     #$07,D0                 ;EVERY 8 CYCLES
+            AND.B   (GSSCYC),D0             ;EVERY GSSCYC CYCLES
             BNE.S   .CLOUD                  ;CREATE A NEW MARK ON GRASS
             LEA     GSSDINIT,A1
             LEA     GSSDUPD,A2
@@ -23,7 +23,7 @@ BGUPD
             JSR     PRPADD
 
 .CLOUD      MOVE.B  (SCRCYCCT),D0
-            AND     #$FF,D0                 ; EVERY 256 CYCLES
+            AND.B   #$FF,D0                 ; EVERY 256 CYCLES
             BNE     .END                    ; CREATE A NEW CLOUD
             LEA     CLDINIT,A1
             LEA     CLDUPD,A2
@@ -80,6 +80,8 @@ BGPLOT
             
             MOVEM.W (A7)+,D1-D4
             RTS
+
+
 
 
 

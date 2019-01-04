@@ -3,8 +3,6 @@
 ; LOCAL MEMORY IS:
 ; +0 WORD X COORDINATE OF THE LEFTMOST EDGE OF THE VERTICALLY ALIGNED PIPES
 ; +2 WORD Y COORDINATE OF THE DOWNMOST EDGE OF THE TOP PIPE (FACING DOWN)
-; +4 WORD BOOLEAN THAT TELLS WHETHER THE PIPE SHOULD MOVE OR NOT
-;    (0 == TRUE. ELSE FALSE)
 ; =============================================================================
 
 ; -----------------------------------------------------------------------------
@@ -13,16 +11,10 @@ PIPINIT
 ; -----------------------------------------------------------------------------
             ;Guardar registros
             MOVEM.L D0-D1,-(A7)
-            
+        
             MOVE.W  #SCRWIDTH,(A0)      ;X COORDINATE OF STARTING POSITION
             JSR     UTLRAND             ;RANDOM Y COORDINATE OF STARTING
             MOVE.W  D0,2(A0)            *POSITION
-            CMP.B   #4,D1
-            BNE.S   .skip
-            
-            CLR.B   (PIPCOUNT)
-.skip            
-            MOVE.B  D1,4(A0)            ;BOOLEAN: MOVING OR NOT
         
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D1
@@ -32,8 +24,8 @@ PIPINIT
 PIPUPD
 ; PIPE UPDATE
 ; -----------------------------------------------------------------------------
-             ;Guardar registros
-            MOVEM.L  D0-D7,-(A7)
+            ;Guardar registros
+            MOVE.L  D0,-(A7)
             
             MOVE.W  (XSPEED),D0     
             SUB.W   D0,(A0)         ;UPDATE X COORDINATE
@@ -41,9 +33,6 @@ PIPUPD
             CMP.W   #-PIPTWDT,(A0)
             BLE.S   .KILL
             
-*            CMP.B   #0,4(A0)       ;CHECK IF MOVING
-*            BNE.S   .END
-
             ;Preparar los registros para llamar a la subrutina que comprueba 
             ;las colisiones con las tuberías. 
             MOVE.W (A0), D0
@@ -61,12 +50,12 @@ PIPUPD
             MOVE.W #1, (PLRDEAD)
             
 .END        ;Restaurar registros
-            MOVEM.L  (A7)+,D0-D7
+            MOVE.L  (A7)+,D0
             RTS
             
 .KILL       JSR     AGLKILL
             BRA.S  .END
-
+            
 ; -----------------------------------------------------------------------------
 PIPPLOT
 ; PIPE PLOT
@@ -74,16 +63,9 @@ PIPPLOT
             ;Guardar registros
             MOVEM.L D0-D4,-(A7)
             
+            ;Seleccionar colores de relleno y dibujado para tuberías.
             UTLSPEN #PIPPC
-            
-            CMP.B   #0,4(A0)
-            BEQ.S   .skip
-            
             UTLSFIL #PIPFC
-            BRA     .skp2
-.skip       
-            UTLSFIL #$00000000      ;prueba para pipes que se han de mover
-.skp2
             
             MOVE.W  (A0),D1         ;PAINT THE BASE OF THE TOP PIPE
             ADDQ    #PIPTBSPC,D1
@@ -130,13 +112,6 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
-
-
-
-
-
-
-
 
 
 
