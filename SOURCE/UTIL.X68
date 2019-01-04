@@ -177,7 +177,6 @@ UTLPLBG
 ; MODIFIES - D0/D2
 ; -----------------------------------------------------------------------------
             TST.B   (SNDSTA)        ; TEST IF SOUND SHOULD BE PLAYED
-            MOVE.L  #$F,D7
             BNE.S   .END
             
             ;Guardar registros
@@ -217,6 +216,7 @@ UTLSTBG
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D2
 .END        RTS
+
 
 
 

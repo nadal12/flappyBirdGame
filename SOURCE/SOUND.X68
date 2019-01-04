@@ -51,18 +51,21 @@ SNDUPD
         ;Guardar registros
         MOVE.L     D0,-(A7)
         
-        TST.B       (BGSND)            ; CHECK IF SOUND IS ON
+        TST.B       (BGSNDINIT)            ; CHECK IF SOUND IS ON
         BNE.S       .END
         
         MOVE.B      (SCRCYCCT),D0
         AND.B       #$3F,D0            ; AFTER 64 CYCLES PLAY BG MUSIC
         BNE.S      .END
+        
+        MOVE.B      #SOUNDOFF,(BGSNDINIT)   ; MARK BG MUSIC AS ALREADY ON PLAY
         JSR         UTLPLBG
 
 .END    ;Restaurar registros
         MOVE.L     (A7)+,D0
         RTS
             
+
 
 
 
