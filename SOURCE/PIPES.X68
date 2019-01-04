@@ -33,6 +33,22 @@ PIPUPD
             CMP.W   #-PIPTWDT,(A0)
             BLE.S   .KILL
             
+            ;Preparar los registros para llamar a la subrutina que comprueba 
+            ;las colisiones con las tuberías. 
+            MOVE.W (A0), D0
+            MOVE.W 2(A0), D1
+            MOVE.W (PLRPOSX), D2
+            MOVE.W (PLRPOSY), D3
+            MOVE.W #PIPBWDT, D4
+            MOVE.W #PLRWIDTH, D5
+            MOVE.W #PIPOPEN, D6
+            MOVE.W #PLRHEIGHT, D7
+            JSR UTLCHCOL           
+            
+            TST.B D0
+            BEQ .END
+            MOVE.W #1, (PLRDEAD)
+            
 .END        ;Restaurar registros
             MOVE.L  (A7)+,D0
             RTS
@@ -96,6 +112,7 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
+
 
 
 

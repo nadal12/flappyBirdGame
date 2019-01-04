@@ -92,7 +92,7 @@ STAPLAYI
             MOVE.B  #GPIPCNRM,(PIPCYC)  ; NORMAL MODE SELECTED
             MOVE.B  #GGSSCNRM,(GSSCYC)
             
-.END        ;JSR     PLRINIT
+.END        JSR     PLRINIT
             
             ;Restaurar registros
             MOVE.L  (A7)+,D0
@@ -115,7 +115,7 @@ STAPLAYU
             BTST.B   #KBDBITPS,(KBDEDGE)         ;Si 'P' es presionado, pausa.
             BNE.S   .PAUSE
             
-*            JSR     PLRUPD
+            JSR     PLRUPD
             JSR     SNDUPD
             JSR     BGUPD
             JSR     PRPUPD
@@ -134,9 +134,8 @@ STAPLAYP
 ; -----------------------------------------------------------------------------
             JSR     BGPLOT
             JSR     PRPPLOT
-            ;JSR     AGLPLOT
-            BRA     AGLPLOT
-            ;BRA     PLRPLOT
+            JSR     AGLPLOT
+            BRA     PLRPLOT
 ; -----------------------------------------------------------------------------
 GMRSET
 ; RESET GAME VARIABLES TO THEIR INITIAL STATE
@@ -163,6 +162,7 @@ GMRSET
             INCLUDE "STATES/INSTR_SCREEN.X68"
             INCLUDE "STATES/PAUSE_SCREEN.X68"
             INCLUDE "STATES/GOVR_SCREEN.X68"
+
 
 
 

@@ -9,12 +9,16 @@ STANEXT     DS.W    1                       ; NEXT GAME STATE
 
 ; --- PLAYER RELATED VARIABLES ------------------------------------------------
 
-PLRPOSX     DS.W    1                       ; PLAYER X POSITION (PIXELS)
-PLRPOSY     DS.W    1                       ; PLAYER Y POSITION (PIXELS)
-PLRENER     DS.W    1                       ; PLAYER ENERGY
-PLRSCORE    DS.W    1                       ; PLAYER SCORE
-PLRDMG      DS.B    1                       ; BIT0: UPD DAMAGE, BIT1 PLOT DMG
-            DS.W    0
+PLRPOSX      DS.W    1                       ; PLAYER X POSITION (PIXELS)
+PLRPOSY      DS.W    1                       ; PLAYER Y POSITION (PIXELS)
+MAXPOS       DS.W    1                       ; JUMP MAX POSITION
+UPPRESSED    DS.W    1                       ; 1 IF UP PRESSED, 0 IF NO PRESSED
+PLRDOWNSPEED DS.W    1                       ; PLAYER DOWN SPEED
+PLRDEAD      DS.W    1                       ; PLAYER DEAD
+PLRSCORE     DS.W    1                       ; PLAYER SCORE
+PLRSCORETEXT DC.B    'SCORE: ',0             ; SCORE TEXT
+             DS.W    0
+
 
 ; --- GAME RELATED VARIABLES --------------------------------------------------
 
@@ -36,6 +40,7 @@ BGSNDINIT   DC.B    0                       ; TO PLAY OR NOT TO PLAY BGSND
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
 
 
 

@@ -30,23 +30,26 @@ GSSDTYPE    EQU     2                       ; NUMBER FOR GRASS DETAIL TYPES
 PIPTYPE     EQU     3                       ; NUMBER FOR PIPE TYPES
 
 ; --- PLAYER RELATED CONSTANTS ------------------------------------------------
+      ;Player colours
 
-PLRWIDTH    EQU     30                      ; PLAYER WIDTH (PIXELS)
-PLRHEIGH    EQU     30                      ; PLAYER HEIGHT (PIXELS)
-PLRINIEN    EQU     500                     ; PLAYER INITIAL ENERGY (<SCRWIDTH)
-PLRSPEED    EQU     5                       ; PLAYER SPEED (PIXELS PER INT)
-PLRNRMCL    EQU     $0000C0FF               ; PLAYER NORMAL COLOR
-PLRDMGCL    EQU     $000000FF               ; PLAYER DAMAGED COLOR
-PLRTXTCL    EQU     $00FFFFFF               ; FONT COLOR
-PLRTXTX     EQU     2                       ; SCORE X COORDINATE
-PLRTXTY     EQU     1                       ; SCORE Y COORDINATE
-PLRLIFEH    EQU     20                      ; HEIGHT OF LIFE BAR
-PLRLIFEY    EQU     SCRHEIGH-PLRLIFEH*2     ; LIFE BAR Y POS
-PLRLIFEC    EQU     $000000FF               ; LIFE BAR COLOR
-PLRUMDMG    EQU     %00000001               ; UPDATE DAMAGE MASK
-PLRPMDMG    EQU     %00000010               ; PLOT DAMAGE MASK
-PLRUBDMG    EQU     0                       ; UPDATE DAMAGE BIT
-PLRPBDMG    EQU     1                       ; PLOT DAMAGE BIT
+GREEN EQU $00008000                         ;GREEN COLOR
+RED   EQU $000000FF                         ;RED COLOR
+WHITE EQU $00FFFFFF                         ;WHITE COLOR
+BLACK EQU $00000000                         ;BLACK COLOR
+
+      ;Constants
+      
+PLRCOLOR        EQU GREEN                   ;PLAYER COLOR
+PLREYECOLOR     EQU WHITE                   ;PLAYER EYE COLOR
+PLRIRISCOLOR    EQU BLACK                   ;PLAYER IRIS COLOR
+PLRMOUTHCOLOR   EQU RED                     ;PLAYER MOUTH COLOR
+PLRWIDTH        EQU 25                      ;PLAYER WIDTH
+PLRHEIGHT       EQU 25                      ;PLAYER HEIGHT
+PLRINITPOSX     EQU 150                     ;INITIAL POSITION OF THE PLAYER (X)
+PLRINITPOSY     EQU 180                     ;INITIAL POSITION OF THE PLAYER (Y)
+JUMPSIZE        EQU 60                      ;JUMP SIZE
+JUMPSPEED       EQU 3                       ;JUMP SPEED (BIG VALUE = SLOW SPEED).
+
 
 ; --- INTRO STATE RELATED CONSTANTS -------------------------------------------
 
@@ -170,6 +173,7 @@ BGSND       EQU     6                       ; SOUND NUM.REF. FOR BACKGROUND SND
 ; --- ONE UTILITY CONSTANT ----------------------------------------------------
 
 PSHFNT      EQU     $011A0001               ; FONT THAT PUSHES TITLES & ETC UP
+
 
 
 
