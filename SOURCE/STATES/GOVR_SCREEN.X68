@@ -23,9 +23,6 @@ STAGOVRP
 ; -----------------------------------------------------------------------------
             MOVEM.L A1/D0-D1,-(A7)
             
-            MOVE.B  #GOVRSND,D1
-            JSR     UTLPLAY
-            
             UTLLOCT GOVSTRX,GOVSTRY
             UTLFONT GOVSTRC,GOVSTRF
 *            UTLSFIL #$00000000
@@ -41,19 +38,36 @@ STAGOVRP
             
             UTLLOCT FINALSCOREX,FINALSCOREY
             
-            ;Print final score. 
-            MOVE #17, D0
-            LEA .SCORESTR,A1
-            MOVE.L #0, D1
-            MOVE.L (PLRSCORE), D1
-            TRAP #15
+            ;Mostrar puntuación final. 
+            UTLLOCT FINALSCOREX,FINALSCOREY
+            MOVE    #17, D0
+            LEA     .SCORESTR,A1
+            MOVE.L  #0, D1
+            MOVE.L  (PLRSCORE), D1
+            TRAP    #15
             
+            ;Mensaje presionar espacio para juego nuevo.
+            UTLFONT INTOPTCU,INTHLPF
+            UTLLOCT SPACEGOVX,SPACEGOVY
+            LEA     .SPACEGOV,A1
+            MOVE.B  #14,D0
+            TRAP    #15
+
             MOVEM.L (A7)+,A1/D0-D1
             RTS
 
-.GOVSTR     DC.B    'GAME  OVER',CR,LF,0
-.SCORESTR   DC.B    'YOUR SCORE IS: ',0
+.GOVSTR     DC.B    'GAME  OVER',0
+.SCORESTR   DC.B    'PUNTUACIÓN FINAL: ',0
+.SPACEGOV   DC.B    'Presione SPACE para continuar',0
+
             DS.W    0
+
+
+
+
+
+
+
 
 
 

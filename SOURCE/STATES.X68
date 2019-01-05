@@ -69,7 +69,6 @@ STAEMPTY
 ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
 ; -----------------------------------------------------------------------------
             RTS
-
 ; -----------------------------------------------------------------------------
 STAPLAYI
 ; PLAY STATE INITIALIZATION.
@@ -162,6 +161,7 @@ GMRSET
             INCLUDE "STATES/INSTR_SCREEN.X68"
             INCLUDE "STATES/PAUSE_SCREEN.X68"
             INCLUDE "STATES/GOVR_SCREEN.X68"
+
 
 
 

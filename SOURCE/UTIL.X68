@@ -201,6 +201,11 @@ UTLPLBG
             TST.B   (SNDSTA)        ; TEST IF SOUND SHOULD BE PLAYED
             BNE.S   .END
             
+            ;Parar todos los sonidos. 
+            MOVE.B    #76,D0
+            MOVE.L    #3,D2
+            TRAP      #15 
+            
             ;Guardar registros
             MOVEM.L D0-D2,-(A7)
 
@@ -238,6 +243,7 @@ UTLSTBG
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D2
 .END        RTS
+
 
 
 

@@ -99,14 +99,17 @@ PLRUPD
             MOVE.W    #0,(UPPRESSED)         
             BRA       .END    
 .GAMEOVER
-            ;Stop all sounds. 
+            ;Parar todos los sonidos. 
             MOVE.B    #76,D0
             MOVE.L    #3,D2
             TRAP      #15  
-          
-            ;Sonido colisión
-            MOVE.B    #PNCHSND,D1
-            JSR       UTLPLAY
+
+            ;Sonido Game Over,
+            MOVE.B  #GOVRSND,D1
+            JSR     UTLPLAY          
+*            ;Sonido colisión
+*            MOVE.B    #PNCHSND,D1
+*            JSR       UTLPLAY
           
             ;Cambiar a estado Game Over. 
             MOVE.W    #STAGOVR,(STANEXT)        
@@ -228,6 +231,9 @@ PLRPLOT
             ;Restaurar registros.
             MOVEM.L   (A7)+,D0-D4
             RTS
+
+
+
 
 *~Font name~Courier New~
 *~Font size~11~
