@@ -22,6 +22,10 @@ STAGOVRP
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.L A1/D0-D1,-(A7)
+            
+            MOVE.B  #GOVRSND,D1
+            JSR     UTLPLAY
+            
             UTLLOCT GOVSTRX,GOVSTRY
             UTLFONT GOVSTRC,GOVSTRF
 *            UTLSFIL #$00000000
@@ -50,6 +54,7 @@ STAGOVRP
 .GOVSTR     DC.B    'GAME  OVER',CR,LF,0
 .SCORESTR   DC.B    'YOUR SCORE IS: ',0
             DS.W    0
+
 
 
 *~Font name~Courier New~

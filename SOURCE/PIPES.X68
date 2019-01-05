@@ -9,6 +9,9 @@
 ; -----------------------------------------------------------------------------
 PIPINIT
 ; PIPE INITIALIZATION
+; INPUT    - NONE 
+; OUTPUT   - NONE
+; MODIFIES - (A0), 2(A0), 4(A0).
 ; -----------------------------------------------------------------------------
             ;Guardar registros
             MOVEM.L D0-D1,-(A7)
@@ -17,6 +20,7 @@ PIPINIT
             JSR     UTLRAND             ;RANDOM Y COORDINATE OF STARTING
             MOVE.W  D0,2(A0)            *POSITION
             CLR.W   4(A0)
+            
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D1
             RTS
@@ -24,51 +28,63 @@ PIPINIT
 ; -----------------------------------------------------------------------------
 PIPUPD
 ; PIPE UPDATE
+; INPUT    - NONE 
+; OUTPUT   - NONE
+; MODIFIES - (A0), 4(A0), (PLRSCORE)
 ; -----------------------------------------------------------------------------
-            ;Guardar registros
-            MOVE.L  D0,-(A7)
+            ;Guardar registros.
+            MOVEM.L  D0-D7,-(A7)
             
             MOVE.W  (XSPEED),D0     
-            SUB.W   D0,(A0)         ;UPDATE X COORDINATE
+            SUB.W   D0,(A0)         ;Actualizar coordenada X. 
             
             CMP.W   #-PIPTWDT,(A0)
             BLE.S   .KILL
             
-            CMP.W #1, 4(A0)
-            BEQ .END            
+            ;Ver si es una tubería ya pasada. 
+            CMP.W   #1, 4(A0)
+            BEQ     .END    
+        
             ;Preparar los registros para llamar a la subrutina que comprueba 
             ;las colisiones con las tuberías. 
-            MOVE.W (A0), D0
-            MOVE.W 2(A0), D1
-            MOVE.W (PLRPOSX), D2
-            MOVE.W (PLRPOSY), D3
-            MOVE.W #PIPBWDT, D4
-            MOVE.W #PLRWIDTH, D5
-            MOVE.W #PIPOPEN, D6
-            MOVE.W #PLRHEIGHT, D7
-            JSR UTLCHCOL           
+            MOVE.W  (A0),D0
+            MOVE.W  2(A0),D1
+            MOVE.W  (PLRPOSX),D2
+            MOVE.W  (PLRPOSY),D3
+            MOVE.W  #PIPBWDT,D4
+            MOVE.W  #PLRWIDTH,D5
+            MOVE.W  #PIPOPEN,D6
+            MOVE.W  #PLRHEIGHT,D7
+            JSR     UTLCHCOL           
             
-            CMP #2, D0
-            BEQ .IGNPIPE
+            ;Si la subrutina devuelve #2, hay que ignorar la tubería. 
+            CMP     #2,D0
+            BEQ     .IGNPIPE
             
-            TST.B D0
-            BEQ .END
-            MOVE.W #1, (PLRDEAD)
-            BRA .END
+            TST.B   D0
+            BEQ     .END
+            
+            ;Jugador muerto. (Colisión detectada).
+            MOVE.W  #1,(PLRDEAD)
+            BRA     .END
 .IGNPIPE
-            MOVE.W #1, 4(A0)
-            ADD.L #1, (PLRSCORE)
+            ;Marcar tebería como ignorada y añadir #1 al score. 
+            MOVE.W  #1,4(A0)
+            ADD.L   #1,(PLRSCORE)
                        
-.END        ;Restaurar registros
-            MOVE.L  (A7)+,D0
+.END        ;Restaurar registros.
+            MOVEM.L  (A7)+,D0-D7
             RTS
             
 .KILL       JSR     AGLKILL
-            BRA.S  .END
+            BRA.S   .END
             
 ; -----------------------------------------------------------------------------
 PIPPLOT
 ; PIPE PLOT
+; INPUT    - NONE 
+; OUTPUT   - NONE
+; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             ;Guardar registros
             MOVEM.L D0-D4,-(A7)
@@ -77,7 +93,8 @@ PIPPLOT
             UTLSPEN #PIPPC
             UTLSFIL #PIPFC
             
-            MOVE.W  (A0),D1         ;PAINT THE BASE OF THE TOP PIPE
+            ;Pintar la base de la tubería superior.
+            MOVE.W  (A0),D1          
             ADDQ    #PIPTBSPC,D1
             CLR     D2
             MOVE.W  D1,D3
@@ -87,7 +104,8 @@ PIPPLOT
             MOVEQ   #87,D0
             TRAP    #15
             
-            MOVE.W  (A0),D1         ;PAINT THE MOUTH OF THE TOP PIPE
+            ;Pintar la boca de la tubería superior.
+            MOVE.W  (A0),D1          
             MOVE.W  2(A0),D4
             MOVE.W  D4,D2
             SUB.W   #PIPTHGT,D2
@@ -97,7 +115,8 @@ PIPPLOT
             MOVEQ   #87,D0
             TRAP    #15
             
-            MOVE.W  (A0),D1         ;PAINT THE BASE OF THE BOTTOM PIPE
+            ;Pintar la base de la tubería inferior.
+            MOVE.W  (A0),D1          
             ADD.W   #PIPTBSPC,D1
             MOVE.W  2(A0),D2
             ADD.W   #PIPOPEN,D2
@@ -108,7 +127,8 @@ PIPPLOT
             MOVEQ   #87,D0
             TRAP    #15
             
-            MOVE.W  (A0),D1         ;PAINT THE MOUTH OF THE BOTTOM PIPE
+            ;Pintar la boca de la tubería inferior.
+            MOVE.W  (A0),D1         
             MOVE.W  2(A0),D2
             ADD.W   #PIPOPEN,D2
             MOVE.W  D1,D3
@@ -122,17 +142,6 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
-
-
-
-
-
-
-
-
-
-
-
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
