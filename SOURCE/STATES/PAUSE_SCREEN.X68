@@ -13,6 +13,7 @@ STAPAUI
             ;CLR.B   (PMOPTN)
             MOVE.B  (SCRCYCCT),D1                 ;Guardar numero de ciclos de
                                                   ;pantalla: -> restaurar luego
+            
             RTS
 ; -----------------------------------------------------------------------------
 STAPAUU
@@ -254,6 +255,8 @@ STAPAUP
 .HLP1       DC.B    'Presione UP o DOWN para moverse por el menú',0
 .HLP2       DC.B    'Presione SPACE para seleccionar',0
             DS.W    0
+
+
 
 
 

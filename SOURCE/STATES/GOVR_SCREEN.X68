@@ -1,6 +1,36 @@
 ; =============================================================================
 ; GAME OVER SCREEN MANAGEMENT
 ; =============================================================================
+; -----------------------------------------------------------------------------
+STAGOVRI
+; GAME OVER STATE INITIALIZATION
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+
+            ;Verificar si el jugador ha muerto para hacer una espera.
+            CMP     #1,(PLRDEAD)
+            BNE     .END
+            
+            JSR     UTLSTBG
+            
+            ;Sonido colisión
+            MOVE.B  #PNCHSND,D1
+            JSR     UTLPLAY
+            
+            ;Espera
+            MOVE.B  #23,D0
+            MOVEQ   #52,D1  ;Tiempo de punchsound (0,48s).
+            TRAP    #15
+            
+            ;Sonido Game Over,
+            MOVE.B  #GOVRSND,D1
+            JSR     UTLPLAY
+           
+.END
+            JSR GMRSET
+            RTS
 
 ; -----------------------------------------------------------------------------
 STAGOVRU
@@ -61,6 +91,8 @@ STAGOVRP
 .SPACEGOV   DC.B    'Presione SPACE para continuar',0
 
             DS.W    0
+
+
 
 
 

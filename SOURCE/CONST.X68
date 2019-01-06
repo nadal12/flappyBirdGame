@@ -32,23 +32,24 @@ PIPTYPE     EQU     3                       ; NUMBER FOR PIPE TYPES
 ; --- PLAYER RELATED CONSTANTS ------------------------------------------------
       ;Player colours
 
-GREEN EQU $00008000                         ;GREEN COLOR
-RED   EQU $000000FF                         ;RED COLOR
-WHITE EQU $00FFFFFF                         ;WHITE COLOR
-BLACK EQU $00000000                         ;BLACK COLOR
+GREEN EQU $00008000                         ; GREEN COLOR
+RED   EQU $000000FF                         ; RED COLOR
+WHITE EQU $00FFFFFF                         ; WHITE COLOR
+BLACK EQU $00000000                         ; BLACK COLOR
 
       ;Constants
       
-PLRCOLOR        EQU GREEN                   ;PLAYER COLOR
-PLREYECOLOR     EQU WHITE                   ;PLAYER EYE COLOR
-PLRIRISCOLOR    EQU BLACK                   ;PLAYER IRIS COLOR
-PLRMOUTHCOLOR   EQU RED                     ;PLAYER MOUTH COLOR
-PLRWIDTH        EQU 25                      ;PLAYER WIDTH
-PLRHEIGHT       EQU 25                      ;PLAYER HEIGHT
-PLRINITPOSX     EQU 150                     ;INITIAL POSITION OF THE PLAYER (X)
-PLRINITPOSY     EQU 180                     ;INITIAL POSITION OF THE PLAYER (Y)
-JUMPSIZE        EQU 60                      ;JUMP SIZE
-JUMPSPEED       EQU 3                       ;JUMP SPEED (BIG VALUE = SLOW SPEED).
+PLRCOLOR        EQU GREEN                   ; PLAYER COLOR
+PLREYECOLOR     EQU WHITE                   ; PLAYER EYE COLOR
+PLRIRISCOLOR    EQU BLACK                   ; PLAYER IRIS COLOR
+PLRMOUTHCOLOR   EQU RED                     ; PLAYER MOUTH COLOR
+PLRWIDTH        EQU 25                      ; PLAYER WIDTH
+PLRHEIGHT       EQU 25                      ; PLAYER HEIGHT
+PLRINITPOSX     EQU 150                     ; INITIAL POSITION OF THE PLAYER (X)
+PLRINITPOSY     EQU 180                     ; INITIAL POSITION OF THE PLAYER (Y)
+JUMPSIZE        EQU 60                      ; JUMP SIZE
+JUMPSPEED       EQU 3                       ; JUMP SPEED (BIG VALUE = SLOW SPEED).
+PLRSCRF         EQU $01120000               ; PLAYER SCORE FONT
 
 
 ; --- INTRO STATE RELATED CONSTANTS -------------------------------------------
@@ -167,13 +168,12 @@ SPACEGOVTF  EQU     $01090000               ; PRESS SPACE TEXT FONT
 
 ; --- SOUND RELATED CONSTANTS -------------------------------------------------
 
-BRDSHRT     EQU     0                       ; SOUND NUM.REF. FOR BIRD SOUND
-FLAPSND     EQU     1                       ; SOUND NUM.REF. FOR BIRD FLAP
-GOVRSND     EQU     2                       ; SOUND NUM.REF. FOR GAME OVER
-MNOPTSD     EQU     3                       ; SOUND NUM.REF. FOR MOVING IN MENU
-PNCHSND     EQU     4                       ; SOUND NUM.REF. FOR PUNCH SOUND
-VICTSND     EQU     5                       ; SOUND NUM.REF. FOR NEW HIGH SCORE
-BGSND       EQU     6                       ; SOUND NUM.REF. FOR BACKGROUND SND
+FLAPSND     EQU     0                       ; SOUND NUM.REF. FOR BIRD FLAP
+GOVRSND     EQU     1                       ; SOUND NUM.REF. FOR GAME OVER
+MNOPTSD     EQU     2                       ; SOUND NUM.REF. FOR MOVING IN MENU
+PNCHSND     EQU     3                       ; SOUND NUM.REF. FOR PUNCH SOUND
+VICTSND     EQU     4                       ; SOUND NUM.REF. FOR NEW HIGH SCORE
+BGSND       EQU     5                       ; SOUND NUM.REF. FOR BACKGROUND SND
 
 ; --- ONE UTILITY CONSTANT ----------------------------------------------------
 
@@ -182,6 +182,8 @@ PSHFNT      EQU     $011A0001               ; FONT THAT PUSHES TITLES & ETC UP
 ; --- OTHER CONSTANTS ---------------------------------------------------------
 CR          EQU $0D                         ;CARRIAGE RETURN
 LF          EQU $0A                         ;LINE FEED
+
+
 
 
 

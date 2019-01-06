@@ -26,6 +26,8 @@ XSPEED      DC.W    5                       ; HORIZONTAL SPEED OF OBJECTS
 SNDSTA      DC.B    0                       ; SOUND STATE
 PIPCYC      DS.B    1                       ; SPAWN PIPES EVERY PIPCYC CYCLES
 GSSCYC      DS.B    1                       ; SPAWN GRASS DETAILS EVERY GSSCYC
+*DO NOT CHANGE THE VALUE OF FRSTRUN*
+FRSTRUN     DC.B    1                       ; INDICATES IF IT'S A NEW GAME
 
 ; --- MENUS RELATED VARIABLES --------------------------------------------
 
@@ -40,6 +42,7 @@ BGSNDINIT   DC.B    0                       ; TO PLAY OR NOT TO PLAY BGSND
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
 
 
 

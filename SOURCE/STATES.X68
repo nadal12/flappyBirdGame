@@ -39,7 +39,7 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAEMPTY,STAPLAYI,STAPAUI,STAEMPTY
+.INITBL     DC.L    STAINTRI,STAEMPTY,STAPLAYI,STAPAUI,STAGOVRI
 .UPDTBL     DC.L    STAINTRU,STAINSTU,STAPLAYU,STAPAUU,STAGOVRU
 
 ; -----------------------------------------------------------------------------
@@ -77,6 +77,10 @@ STAPLAYI
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+            ;Comprobar si es la primera vez que se ejecuta el juego.             
+            TST.B   (FRSTRUN)
+            BEQ     .END
+            CLR.B   (FRSTRUN)
             ;Guardar registros
             MOVE.L  D0,-(A7)
             
@@ -91,19 +95,19 @@ STAPLAYI
             MOVE.B  #GPIPCNRM,(PIPCYC)  ; NORMAL MODE SELECTED
             MOVE.B  #GGSSCNRM,(GSSCYC)
             
-.END        JSR     PLRINIT
+.PLRINIT    JSR     PLRINIT
             
             ;Restaurar registros
             MOVE.L  (A7)+,D0
-            RTS
+.END        RTS
 .EASY   
             MOVE.B  #GPIPCESY,(PIPCYC)  ; EASY MODE SELECTED
             MOVE.B  #GGSSCESY,(GSSCYC)
-            BRA.S   .END
+            BRA.S   .PLRINIT
 .HARD
             MOVE.B  #GPIPCHRD,(PIPCYC)  ; HARD MODE SELECTED
             MOVE.B  #GGSSCHRD,(GSSCYC)
-            BRA.S   .END
+            BRA.S   .PLRINIT
 ; -----------------------------------------------------------------------------
 STAPLAYU
 ; PLAY STATE UPDATE
@@ -142,16 +146,14 @@ GMRSET
 ; OUTPUT   - NONE
 ; MODIFIES - GAME VARIABLES (@ VAR.X68 & SOME OF SYSVAR.X68) 
 ; -----------------------------------------------------------------------------
-            CLR.W   (SCRCYCCT)
+            CLR.B   (SCRCYCCT)
             CLR.B   (PMOPTN)
             CLR.B   (BGSNDINIT)
             MOVE.W  #5,(XSPEED)
             CLR.B   (UTLRNDIX)
-            CLR.W   (PLRPOSX)
-            CLR.W   (PLRPOSY)
-            CLR.W   (PLRSCORE)
             CLR.B   (PIPCYC)
             CLR.B   (GSSCYC)
+            MOVE.B  #1,(FRSTRUN)
             RTS
 
 ; -----------------------------------------------------------------------------
@@ -161,6 +163,11 @@ GMRSET
             INCLUDE "STATES/INSTR_SCREEN.X68"
             INCLUDE "STATES/PAUSE_SCREEN.X68"
             INCLUDE "STATES/GOVR_SCREEN.X68"
+
+
+
+
+
 
 
 

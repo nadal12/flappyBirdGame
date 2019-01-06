@@ -229,11 +229,12 @@ STAINTRP
 .START_TEXT DC.B    'JUEGO NUEVO',0
 .DIF_ESY    DC.B    'DIFICULTAD: <- FÁCIL ->',0
 .DIF_NRM    DC.B    'DIFICULTAD: <- NORMAL ->',0
-.DIF_HRD    DC.B    'DIFICULTAD: <- DIFICIL ->',0
+.DIF_HRD    DC.B    'DIFICULTAD: <- DIFÍCIL ->',0
 .INST       DC.B    'INSTRUCCIONES',0
 .HLP1       DC.B    'Presione UP, DOWN, LEFT o RIGHT para moverse por el menú',0
 .HLP2       DC.B    'Presione SPACE para seleccionar',0
             DS.W    0
+
 
 
 

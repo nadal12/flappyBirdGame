@@ -14,7 +14,7 @@ SNDINIT
             
             LEA         .PATHPTR,A0         ; LOAD POINTER TO POINTERS OF PATHS
             MOVEQ       #71,D0              ; LOAD TASK NUMBER
-            MOVEQ       #BRDSHRT,D1         ; CARGAR EL MENOR NUM.REF. DE SND.
+            MOVEQ       #FLAPSND,D1         ; CARGAR EL MENOR NUM.REF. DE SND.
             MOVEQ       #BGSND,D2         ; CARGAR EL MAYOR NUM.REF. DE SND.
             
 .LOOP       MOVEA.L     (A0)+,A1            ; CARGAR PATH A FICHERO DE SONIDO
@@ -28,7 +28,6 @@ SNDINIT
             RTS
             
 ; RUTAS DE ARCHIVOS -----------------------------------------------------------
-.BRDSHRT    DC.B    'MEDIA/bird-sound-short.wav',0
 .FLAPSND    DC.B    'MEDIA/flap-sound.wav',0
 .GOVRSND    DC.B    'MEDIA/game-over-sound.wav',0
 .MNOPTSD    DC.B    'MEDIA/menu-move-sound.wav',0
@@ -36,7 +35,7 @@ SNDINIT
 .VICTSND    DC.B    'MEDIA/win-sound.wav',0
 .BGSND      DC.B    'MEDIA/background-music.wav',0
             DS.W    0
-.PATHPTR    DC.L    .BRDSHRT,.FLAPSND,.GOVRSND,.MNOPTSD
+.PATHPTR    DC.L    .FLAPSND,.GOVRSND,.MNOPTSD
             DC.L    .PNCHSND,.VICTSND,.BGSND,0
             
 ; -----------------------------------------------------------------------------
@@ -63,6 +62,7 @@ SNDUPD
         MOVE.L     (A7)+,D0
         RTS
             
+
 
 
 

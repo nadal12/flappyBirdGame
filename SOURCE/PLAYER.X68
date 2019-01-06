@@ -98,20 +98,9 @@ PLRUPD
             ;la bajada. 
             MOVE.W    #0,(UPPRESSED)         
             BRA       .END    
-.GAMEOVER
-            ;Parar todos los sonidos. 
-            MOVE.B    #76,D0
-            MOVE.L    #3,D2
-            TRAP      #15  
-
-            ;Sonido Game Over,
-            MOVE.B  #GOVRSND,D1
-            JSR     UTLPLAY          
-*            ;Sonido colisión
-*            MOVE.B    #PNCHSND,D1
-*            JSR       UTLPLAY
-          
-            ;Cambiar a estado Game Over. 
+.GAMEOVER            
+            ;Cambiar a estado Game Over.
+            MOVE.W    #1,(PLRDEAD)
             MOVE.W    #STAGOVR,(STANEXT)        
             BRA       .END                     
 .END
@@ -135,10 +124,7 @@ PLRPLOT
             UTLSFIL   #BLACK
             
             ;Establecer ajustes de fuente.
-            MOVE.L    #21,D0
-            MOVE.L    #WHITE,D1
-            CLR.L     D2
-            TRAP      #15 
+            UTLFONT   WHITE,PLRSCRF
             
             ;Imprimir puntuación.
             MOVE      #17,D0
@@ -227,10 +213,12 @@ PLRPLOT
            
             MOVE.B    #88,D0
             TRAP      #15
-            
+                          
             ;Restaurar registros.
             MOVEM.L   (A7)+,D0-D4
             RTS
+
+
 
 
 
