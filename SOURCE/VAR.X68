@@ -31,10 +31,10 @@ GSSCYC      DS.B    1                       ; SPAWN GRASS DETAILS EVERY GSSCYC
 *DO NOT CHANGE THE VALUE OF FRSTRUN*
 FRSTRUN     DC.B    1                       ; INDICATES IF IT'S A NEW GAME
 
-; --- MENUS RELATED VARIABLES --------------------------------------------
+; --- MENUS RELATED VARIABLES -------------------------------------------------
 
 PMOPTN      DC.B    0                       ; OPTION ON THE MENU TO BE CHOSEN
-
+RSULT       DC.L    0                       ; BUFFER FOR DATA READ FROM FILE
 
 ; --- SOUND RELATED VARIABLES -------------------------------------------------
 
@@ -44,6 +44,10 @@ BGSNDINIT   DC.B    0                       ; TO PLAY OR NOT TO PLAY BGSND
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
+
+
+
 
 
 

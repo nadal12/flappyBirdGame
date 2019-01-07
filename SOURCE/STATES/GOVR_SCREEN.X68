@@ -24,10 +24,24 @@ STAGOVRI
             MOVEQ   #52,D1  ;Tiempo de punchsound (0,48s).
             TRAP    #15
             
-            ;Sonido Game Over,
+            ; CHECK SI SE HA ROTO RECORD   
+            JSR     UTLHSCR
+            
+            TST.W   D0
+            BNE     .NRCRD
+            
+            TST.L   (PLRSCORE)
+            BEQ     .NRCRD
+            
+            ;Sonido victoria
+            MOVE.B  #VICTSND,D1
+            JSR     UTLPLAY
+            BRA     .END
+            
+.NRCRD      ;Sonido Game Over,
             MOVE.B  #GOVRSND,D1
             JSR     UTLPLAY
-           
+         
 .END
             JSR GMRSET
             RTS
@@ -55,7 +69,6 @@ STAGOVRP
             
             UTLLOCT GOVSTRX,GOVSTRY
             UTLFONT GOVSTRC,GOVSTRF
-*            UTLSFIL #$00000000
            
             ;Set background color. 
             MOVE.L  #81, D0
@@ -65,15 +78,19 @@ STAGOVRP
             LEA     .GOVSTR,A1
             MOVE.B  #14,D0
             TRAP    #15
-            
-            UTLLOCT FINALSCOREX,FINALSCOREY
-            
+        
             ;Mostrar puntuación final. 
             UTLLOCT FINALSCOREX,FINALSCOREY
             MOVE    #17, D0
             LEA     .SCORESTR,A1
-            MOVE.L  #0, D1
-            MOVE.L  (PLRSCORE), D1
+            MOVE.L  (PLRSCORE),D1
+            TRAP    #15
+            
+            ;Mostrar record anterior.
+            UTLLOCT RECORDSCRX,RECORDSCRY
+            MOVEQ   #17,D0
+            LEA     .RCORDSTR,A1
+            MOVE.L  (RSULT),D1
             TRAP    #15
             
             ;Mensaje presionar espacio para juego nuevo.
@@ -88,9 +105,13 @@ STAGOVRP
 
 .GOVSTR     DC.B    'GAME  OVER',0
 .SCORESTR   DC.B    'PUNTUACIÓN FINAL: ',0
+.RCORDSTR   DC.B    'ÚLTIMO RECORD: ',0
 .SPACEGOV   DC.B    'Presione SPACE para continuar',0
 
             DS.W    0
+
+
+
 
 
 

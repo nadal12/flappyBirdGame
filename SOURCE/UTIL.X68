@@ -298,13 +298,13 @@ UTLHSCR
 ; --- POSITIONING WITHIN FILE -------------------
         ;IF FILE IS NOT EMPTY, READ THE LAST SCORE
         ; RESULTS FOR NORMAL OR HARD START AT BYTE 4 AND 8 RESPECTIVELY
-        CMP.B   #INTOHRD,(XSPEED)
+        CMP.W   #INTOHRD,(XSPEED)
         BNE     .RNRM
         
         MOVEQ   #8,D2           ; POSICIONARSE EN EL BYTE 8
         BRA     .RTRP
         
-.RNRM   CMP.B   #INTONRM,(XSPEED)
+.RNRM   CMP.W   #INTONRM,(XSPEED)
         BNE     .RESY
         
         MOVEQ   #4,D2           ; POSICIONARSE EN EL BYTE 4
@@ -335,13 +335,13 @@ UTLHSCR
 ; --- WRITING ON  FILE --------------------------
         ;IF FILE IS NOT EMPTY, WRITE THE LAST SCORE
         ; RESULTS FOR NORMAL OR HARD START AT BYTE 4 AND 8 RESPECTIVELY
-        CMP.B   #INTOHRD,(XSPEED)
+        CMP.W   #INTOHRD,(XSPEED)
         BNE     .WNRM
         
         MOVEQ   #8,D2           ; POSICIONARSE EN EL BYTE 8
         BRA     .WTRP
         
-.WNRM   CMP.B   #INTONRM,(XSPEED)
+.WNRM   CMP.W   #INTONRM,(XSPEED)
         BNE     .WESY
         
         MOVEQ   #4,D2           ; POSICIONARSE EN EL BYTE 4
@@ -402,8 +402,7 @@ UTLHSCR
 .SIZEOFINT  EQU     4                     ; tamaño de un entero (dato a salvar)
 .TPPATH     DC.B    'ARCHIVOS/TOP3.txt',0 ; path a fichero donde salvar score
             DS.W    0
-RSULT       DS.B    4                     ; BUFFER FOR DATA READ FROM FILE
-            DS.W    0
+
 
 
 

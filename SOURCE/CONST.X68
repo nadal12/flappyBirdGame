@@ -160,8 +160,10 @@ GOVSTRX     EQU     13                      ; TITLE X COORDINATE
 GOVSTRY     EQU     6                       ; TITLE Y COORDINATE
 FINALSCOREX EQU     10                      ; FINAL SCORE X COORDINATE
 FINALSCOREY EQU     8                       ; FINAL SCORE Y COORDINATE
+RECORDSCRX  EQU     11                      ; LAST RECORD X COORDINATE
+RECORDSCRY  EQU     10                      ; LAST RECORD Y COORDINATE
 SPACEGOVX   EQU     25                      ; PRESS SPACE X COORDINATE
-SPACEGOVY   EQU     25                     ; PRESS SPACE Y COORDINATE
+SPACEGOVY   EQU     25                      ; PRESS SPACE Y COORDINATE
 GOVSTRC     EQU     $00FFFFFF               ; TITLE COLOR
 GOVSTRF     EQU     $01130001               ; TITLE FONT
 SPACEGOVTF  EQU     $01090000               ; PRESS SPACE TEXT FONT
@@ -182,6 +184,7 @@ PSHFNT      EQU     $011A0001               ; FONT THAT PUSHES TITLES & ETC UP
 ; --- OTHER CONSTANTS ---------------------------------------------------------
 CR          EQU $0D                         ;CARRIAGE RETURN
 LF          EQU $0A                         ;LINE FEED
+
 
 
 
