@@ -149,7 +149,6 @@ GMRSET
             CLR.B   (SCRCYCCT)
             CLR.B   (PMOPTN)
             CLR.B   (BGSNDINIT)
-            MOVE.W  #5,(XSPEED)
             CLR.B   (UTLRNDIX)
             CLR.B   (PIPCYC)
             CLR.B   (GSSCYC)
@@ -163,6 +162,7 @@ GMRSET
             INCLUDE "STATES/INSTR_SCREEN.X68"
             INCLUDE "STATES/PAUSE_SCREEN.X68"
             INCLUDE "STATES/GOVR_SCREEN.X68"
+
 
 
 
