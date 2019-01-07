@@ -266,6 +266,145 @@ UTLSTBG
             MOVEM.L (A7)+,D0-D2
 .END        RTS
 
+; -----------------------------------------------------------------------------
+UTLHSCR
+; SUBROUTINE LOOKS FOR THE HIGHEST SCORE FOR A GIVEN DIFFICULTY STORED IN 
+; MEMORY AND UPDATES IF RECORD IS BROKEN
+; INPUT     - NONE
+; OUTPUT    - D0.W: 0 IF SCORED A NEW RECORD. 1 OTHERWISE.
+; MODIFIES  - 4 BYTES ON MEMORY CONTAINING THE RESULT OF TRAP 15 TASK 53.
+; -----------------------------------------------------------------------------
+        ;Guardar registros
+        MOVEM.L  D1-D2/A1,-(A7)
+        
+        ;CLOSE ALL FILES
+        MOVEQ   #50,D0
+        TRAP    #15
+        
+; --- OPENING FILE ------------------------------
+        ;TRY TO OPEN EXISTING FILE
+        LEA     .TPPATH,A1
+        MOVEQ   #51,D0
+        TRAP    #15
+        
+        ;CHECK RESULT OF TRAP TASK 51
+        CMP     #.ERR,D0
+        BEQ     .NWFILE
+        
+        ;CHECK IF EOF ENCOUNTERED
+        CMP     #.EOFE,D0
+        BEQ     .WRT
+        
+; --- POSITIONING WITHIN FILE -------------------
+        ;IF FILE IS NOT EMPTY, READ THE LAST SCORE
+        ; RESULTS FOR NORMAL OR HARD START AT BYTE 4 AND 8 RESPECTIVELY
+        CMP.B   #INTOHRD,(XSPEED)
+        BNE     .RNRM
+        
+        MOVEQ   #8,D2           ; POSICIONARSE EN EL BYTE 8
+        BRA     .RTRP
+        
+.RNRM   CMP.B   #INTONRM,(XSPEED)
+        BNE     .RESY
+        
+        MOVEQ   #4,D2           ; POSICIONARSE EN EL BYTE 4
+.RTRP   MOVEQ   #55,D0
+        TRAP    #15        
+      
+        ;IF IT'S NOT NORMAL OR HARD, IT MUST BE EASY  
+.RESY        
+; --- READING FROM FILE -------------------------
+        ;READ THE LAST SCORE
+        MOVEQ.L #.SIZEOFINT,D2
+        MOVEQ   #53,D0
+        LEA     RSULT,A1
+        TRAP    #15
+        
+        ;CHECK FOR ERROR
+        CMP     #.ERR,D0
+        BEQ     .WRT
+        CMP.L    #.SIZEOFINT,D2         ; VER SI SE LEYÓ LA CANTIDAD DE BYTES
+        BNE     .WRT
+        
+        ;IF NEW RECORD SET, WRITE ON FILE
+        MOVE.L  (RSULT),D2
+        CMP.L   (PLRSCORE),D2
+        BGE     .NORCRD
+        
+.WRT    
+; --- WRITING ON  FILE --------------------------
+        ;IF FILE IS NOT EMPTY, WRITE THE LAST SCORE
+        ; RESULTS FOR NORMAL OR HARD START AT BYTE 4 AND 8 RESPECTIVELY
+        CMP.B   #INTOHRD,(XSPEED)
+        BNE     .WNRM
+        
+        MOVEQ   #8,D2           ; POSICIONARSE EN EL BYTE 8
+        BRA     .WTRP
+        
+.WNRM   CMP.B   #INTONRM,(XSPEED)
+        BNE     .WESY
+        
+        MOVEQ   #4,D2           ; POSICIONARSE EN EL BYTE 4
+.WTRP   MOVEQ   #55,D0
+        TRAP    #15        
+      
+        ;IF IT'S NOT NORMAL OR HARD, IT MUST BE EASY  
+.WESY   
+        ;WRITE ON NEW RECORD        
+        ;PREPARAR TRAP 54
+        MOVEQ.L #.SIZEOFINT,D2
+        MOVEQ   #54,D0                  ; ESCRIBIR NUEVO RECORD EN FICHERO
+        LEA     PLRSCORE,A1
+        TRAP    #15
+
+        CLR.W   D0
+        BRA     .END
+        
+.NORCRD MOVE.W  #1,D0                   ; SI NO SE HA ROTO UN RECORD, AVISAR   
+
+; --- FINISH WITH FILE --------------------------
+.END    MOVE.L  D0,-(A7)                ; GUARDAR RESULTADO A RETORNAR
+
+        ;CLOSE ALL FILES
+        MOVEQ   #50,D0
+        TRAP    #15     
+    
+        MOVE.L  (A7)+,D0                ; RESTAURAR RESULTADO A RETORNAR
+        
+        ;Restaurar registros
+        MOVEM.L  (A7)+,A1/D1-D2
+        RTS  
+
+.NWFILE 
+        ;TRY TO OPEN NEW FILE
+        MOVEQ   #52,D0
+        TRAP    #15
+        
+        ;CHECK FOR ERRORS
+        CMP     #.ERR,D0
+        BEQ     .NWERR  
+        
+        ;ESCRIBIR 0'S EN FICHERO VACÍO
+        MOVEQ   #.SIZEOFINT*3,D2
+        MOVEQ   #54,D0
+        LEA     .WREMPTY,A1 
+        TRAP    #15
+        
+        BRA     .WRT
+        
+.NWERR  CLR.W   D0
+        BRA     .END
+        
+; --- VARIABLES Y CONSTANTES DE SUBRUTINA -------------------------------------
+.WREMPTY    DC.L    0,0,0                 ; buffer para escribir 0's en archivo
+.EOFE       EQU     1                     ; código de error para end of file
+.ERR        EQU     2                     ; código de error para errores
+.SIZEOFINT  EQU     4                     ; tamaño de un entero (dato a salvar)
+.TPPATH     DC.B    'ARCHIVOS/TOP3.txt',0 ; path a fichero donde salvar score
+            DS.W    0
+RSULT       DS.B    4                     ; BUFFER FOR DATA READ FROM FILE
+            DS.W    0
+
 
 
 
