@@ -58,13 +58,13 @@ PIPUPD
             JSR     UTLCHCOL           
             
             ;Si la subrutina devuelve #2, hay que ignorar la tubería. 
-            CMP     #2,D0
+            CMP     #1,D0
             BEQ     .IGNPIPE
-            CMP     #4,D0
-            BEQ     .COLINFPIPE
             CMP     #3,D0
+            BEQ     .COLINFPIPE
+            CMP     #2,D0
             BEQ     .COLSUPPIPE
-            CMP     #5,D0
+            CMP     #4,D0
             BEQ     .COLEDGEPIPE
             
             TST.B   D0
@@ -76,18 +76,23 @@ PIPUPD
             ADD.W   #PIPOPEN,(PLRDEADY)
             SUB.W   #PLRHEIGHT,(PLRDEADY)
             MOVE.W  (PLRPOSX),(PLRDEADX)
-            BRA .PLRDEAD
+            BRA     .PLRDEAD
+            
+            ;Calcular posición de jugador muerto en tubería superior.             
 .COLSUPPIPE
             MOVE.W  2(A0),(PLRDEADY)
             MOVE.W  (PLRPOSX),(PLRDEADX)
-            BRA .PLRDEAD
+            BRA     .PLRDEAD
+
+            ;Calcular posición de jugador muerto en un lado de la tubería.             
 .COLEDGEPIPE
             MOVE.W  (A0),(PLRDEADX)
             SUB.W   #PLRWIDTH,(PLRDEADX)
             MOVE.W  (PLRPOSY),(PLRDEADY)
             
             ;Jugador muerto. (Colisión detectada).
-.PLRDEAD    MOVE.W  #1,(PLRDEAD)
+.PLRDEAD    
+            MOVE.W  #1,(PLRDEAD)
             BRA     .END
 
 .IGNPIPE
@@ -165,6 +170,8 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
+
+
 
 *~Font name~Courier New~
 *~Font size~10~

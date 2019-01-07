@@ -75,46 +75,41 @@ UTLCHCOL
 ;            D5.W WIDTH 1
 ;            D6.W HEIGHT 0
 ;            D7.W HEIGHT 1
-; OUTPUT   - D0.B=FF - COLLISION, =0 - NO COLLISION
+; OUTPUT   - D0.B=0 - NO COLLISION 
+;                =1 - NO COLLISION IGNORE PIPE
+;                =2 - COLLISION TOP PIPE
+;                =3 - COLLISION BOTTOM PIPE
+;                =4 - COLLISION EDGE PIPE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-             MOVEM.W D2/D4/D6/D7,-(A7)
+            MOVEM.W D2/D4/D6/D7,-(A7)
 
             ;Verificar si la tubería esta delante o detrás del pájaro. 
-            
-            ADD.W D0, D4 ;Pared derecha de la tubería.
-            CMP D2, D4
-            BCS .NOCOLIGNPIPE
+            ADD.W   D0, D4 ;Pared derecha de la tubería.
+            CMP     D2, D4
+            BCS     .NOCOLIGNPIPE
             
             ;Comprobar si el pájaro ha alcanzado la tubería.
+            ADD.W   D5, D2 ;Parte delantera del pájaro.
+            CMP     D0, D2
+            BCS     .NOCOL
             
-            ADD.W D5, D2 ;Parte delantera del pájaro.
-            CMP D0, D2
-            BCS .NOCOL
             ;Comprobar parte superior del pájaro con la parte inferior de la 
             ;tubería superior.
-                        
-            CMP D1, D3
-            BLE .COLSUPPIPE 
+            CMP     D1,D3
+            BLE     .COLSUPPIPE 
             
-            ADD.W D1, D6 ;Parte superior de la tubería inferior.
-            ADD.W D3, D7 ;Parte inferior del pájaro. 
-            CMP D6, D7
-            BCS .NOCOL
+            ADD.W   D1, D6 ;Parte superior de la tubería inferior.
+            ADD.W   D3, D7 ;Parte inferior del pájaro. 
+            CMP     D6, D7
+            BCS     .NOCOL
           
             ;Ha dado en un lado o en la tubería inferior.
-            ADD.W #5,D0
-            CMP   D0,D2
-            BGT   .COLINFPIPE
-            BRA   .COLEDGEPIPE
-
- ;Si no se realiza ninguno de los saltos anteriores, hay colisión. 
-.COL
-            ;MOVE.W  #$FF, D0
-
-            MOVE.   #4,D0
-            BRA     .END                                
-
+            ADD.W   #5,D0
+            CMP     D0,D2
+            BGT     .COLINFPIPE
+            BRA     .COLEDGEPIPE
+            
             ;No hay colisión.
 .NOCOL                    
             MOVE.W  #0, D0
@@ -122,27 +117,26 @@ UTLCHCOL
             
             ;Colisión dentro de la tubería (parte superior).
 .COLSUPPIPE 
-            
-            SUB.W   #5,D1
+            SUB.W   #28,D1
             CMP     D1,D3
             BCS     .COLEDGEPIPE
 
-            MOVE.W  #3,D0
+            MOVE.W  #2,D0
             BRA     .END
             
             ;Colisión dentro de la tubería (parte inferior).
 .COLINFPIPE
-            MOVE.W  #4,D0
+            MOVE.W  #3,D0
             BRA     .END
             
             ;Colisión en un lado de la tubería.           
 .COLEDGEPIPE
-            MOVE.W  #5,D0
+            MOVE.W  #4,D0
             BRA .END
                 
             ;Ingorar tubería.             
 .NOCOLIGNPIPE
-            MOVE.W  #2, D0
+            MOVE.W  #1, D0
             
 .END          
             MOVEM.W (A7)+,D2/D4/D6/D7
@@ -230,9 +224,9 @@ UTLPLBG
             BNE.S   .END
             
             ;Parar todos los sonidos. 
-            MOVE.B    #76,D0
-            MOVE.L    #3,D2
-            TRAP      #15 
+            MOVE.B  #76,D0
+            MOVE.L  #3,D2
+            TRAP    #15 
             
             ;Guardar registros
             MOVEM.L D0-D2,-(A7)
@@ -271,6 +265,7 @@ UTLSTBG
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D2
 .END        RTS
+
 
 
 
