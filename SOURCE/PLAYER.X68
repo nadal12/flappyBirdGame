@@ -51,8 +51,16 @@ PLRUPD
             ADDQ      #1,(PLRDOWNSPEED)
             MOVE.W    D0,(PLRPOSY)
          
+            ;Establecer corrección de salida por parte inferior. 
+            MOVE.W    #BGGSSTP,D1
+            MOVE.W    #PLRHEIGHT,D0
+            SUB.W     D0,D1
+            MOVE.W    D1,(PLRDEADY)
+            MOVE.W    (PLRPOSX),(PLRDEADX)
+            
             ;Comprobar si ha salido por la parte inferior.
             MOVE.W    #BGGSSTP,D1
+            MOVE.W    (PLRPOSY),D0
             ADD.W     #PLRHEIGHT,D0
             CMP       D0,D1
             BMI       .GAMEOVER         
@@ -72,11 +80,11 @@ PLRUPD
             MOVE.W    #1,(UPPRESSED)
             BRA       .END     
 .MAKEJUMP
-            ;Se ha apretado la tecla UP anteriormente (eso indica que el salto no
-            ;ha finalizado). 
+          ;Se ha apretado la tecla UP anteriormente (eso indica que el salto no
+          ;ha finalizado). 
           
-            ;FÓRMULA: (PLRPOSY-MAXPOS)/JUMPSPEED = VALOR QUE SE TIENE QUE RESTAR 
-            ;A LA POSICIÓN ACTUAL PARA OBTENER LA NUEVA POSICIÓN.
+           ;FÓRMULA: (PLRPOSY-MAXPOS)/JUMPSPEED = VALOR QUE SE TIENE QUE RESTAR 
+           ;A LA POSICIÓN ACTUAL PARA OBTENER LA NUEVA POSICIÓN.
             MOVE.W    (PLRPOSY),D0
             MOVE.W    (MAXPOS),D1
             SUB.W     D1,D0             
@@ -84,6 +92,8 @@ PLRUPD
             SUB.W     D0,(PLRPOSY)       ;Posición nueva. 
 
             ;Ver si ha salido por la parte superior. 
+            MOVE.W    #0,(PLRDEADY)   ;Se corrige la salida por parte superior.
+            MOVE.W    (PLRPOSX),(PLRDEADX)
             CMP       #0,(PLRPOSY)
             BMI       .GAMEOVER
             CMP       #1,D0
@@ -100,6 +110,8 @@ PLRUPD
             BRA       .END    
 .GAMEOVER            
             ;Cambiar a estado Game Over.
+            MOVE.W    (PLRDEADY),(PLRPOSY)   ;Se corrige la salida de pantalla.  
+            MOVE.W    (PLRDEADX),(PLRPOSX)
             MOVE.W    #1,(PLRDEAD)
             MOVE.W    #STAGOVR,(STANEXT)        
             BRA       .END                     
@@ -217,6 +229,8 @@ PLRPLOT
             ;Restaurar registros.
             MOVEM.L   (A7)+,D0-D4
             RTS
+
+
 
 
 

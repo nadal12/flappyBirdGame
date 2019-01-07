@@ -91,30 +91,58 @@ UTLCHCOL
             ADD.W D5, D2 ;Parte delantera del pájaro.
             CMP D0, D2
             BCS .NOCOL
-            
-            ;Comprobar parte inferior del pájaro con la parte superior de la 
-            ;tubería inferior.
+            ;Comprobar parte superior del pájaro con la parte inferior de la 
+            ;tubería superior.
                         
             CMP D1, D3
-            BLE .COL 
+            BLE .COLSUPPIPE 
             
             ADD.W D1, D6 ;Parte superior de la tubería inferior.
             ADD.W D3, D7 ;Parte inferior del pájaro. 
             CMP D6, D7
             BCS .NOCOL
-     
-           ;Si no se realiza ninguno de los saltos anteriores, hay colisión. 
-.COL
-            MOVE.W  #$FF, D0
-            BRA .END                                
+          
+            ;Ha dado en un lado o en la tubería inferior.
+            ADD.W #5,D0
+            CMP   D0,D2
+            BGT   .COLINFPIPE
+            BRA   .COLEDGEPIPE
 
+ ;Si no se realiza ninguno de los saltos anteriores, hay colisión. 
+.COL
+            ;MOVE.W  #$FF, D0
+
+            MOVE.   #4,D0
+            BRA     .END                                
+
+            ;No hay colisión.
 .NOCOL                    
-            MOVE.W #0, D0
+            MOVE.W  #0, D0
+            BRA     .END
+            
+            ;Colisión dentro de la tubería (parte superior).
+.COLSUPPIPE 
+            
+            SUB.W   #5,D1
+            CMP     D1,D3
+            BCS     .COLEDGEPIPE
+
+            MOVE.W  #3,D0
+            BRA     .END
+            
+            ;Colisión dentro de la tubería (parte inferior).
+.COLINFPIPE
+            MOVE.W  #4,D0
+            BRA     .END
+            
+            ;Colisión en un lado de la tubería.           
+.COLEDGEPIPE
+            MOVE.W  #5,D0
             BRA .END
-            
+                
+            ;Ingorar tubería.             
 .NOCOLIGNPIPE
-            
-            MOVE.W #2, D0
+            MOVE.W  #2, D0
             
 .END          
             MOVEM.W (A7)+,D2/D4/D6/D7
@@ -243,6 +271,7 @@ UTLSTBG
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D2
 .END        RTS
+
 
 
 

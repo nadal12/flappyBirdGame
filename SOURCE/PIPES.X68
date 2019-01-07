@@ -39,7 +39,7 @@ PIPUPD
             SUB.W   D0,(A0)         ;Actualizar coordenada X. 
             
             CMP.W   #-PIPTWDT,(A0)
-            BLE.S   .KILL
+            BLE.L   .KILL
             
             ;Ver si es una tubería ya pasada. 
             CMP.W   #1, 4(A0)
@@ -60,13 +60,36 @@ PIPUPD
             ;Si la subrutina devuelve #2, hay que ignorar la tubería. 
             CMP     #2,D0
             BEQ     .IGNPIPE
+            CMP     #4,D0
+            BEQ     .COLINFPIPE
+            CMP     #3,D0
+            BEQ     .COLSUPPIPE
+            CMP     #5,D0
+            BEQ     .COLEDGEPIPE
             
             TST.B   D0
             BEQ     .END
             
+.COLINFPIPE
+            ;Calcular posición de jugador muerto en tubería inferior. 
+            MOVE.W  2(A0),(PLRDEADY)
+            ADD.W   #PIPOPEN,(PLRDEADY)
+            SUB.W   #PLRHEIGHT,(PLRDEADY)
+            MOVE.W  (PLRPOSX),(PLRDEADX)
+            BRA .PLRDEAD
+.COLSUPPIPE
+            MOVE.W  2(A0),(PLRDEADY)
+            MOVE.W  (PLRPOSX),(PLRDEADX)
+            BRA .PLRDEAD
+.COLEDGEPIPE
+            MOVE.W  (A0),(PLRDEADX)
+            SUB.W   #PLRWIDTH,(PLRDEADX)
+            MOVE.W  (PLRPOSY),(PLRDEADY)
+            
             ;Jugador muerto. (Colisión detectada).
-            MOVE.W  #1,(PLRDEAD)
+.PLRDEAD    MOVE.W  #1,(PLRDEAD)
             BRA     .END
+
 .IGNPIPE
             ;Marcar tebería como ignorada y añadir #1 al score. 
             MOVE.W  #1,4(A0)
@@ -142,6 +165,7 @@ PIPPLOT
             ;Restaurar registros
             MOVEM.L (A7)+,D0-D4
             RTS
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

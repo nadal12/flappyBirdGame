@@ -11,6 +11,8 @@ STANEXT     DS.W    1                       ; NEXT GAME STATE
 
 PLRPOSX      DS.W    1                       ; PLAYER X POSITION (PIXELS)
 PLRPOSY      DS.W    1                       ; PLAYER Y POSITION (PIXELS)
+PLRDEADX     DS.W    1                       ; PLAYER X POSITION AT DEAD
+PLRDEADY     DS.W    1                       ; PLAYER Y POSITION AT DEAD
 MAXPOS       DS.W    1                       ; JUMP MAX POSITION
 UPPRESSED    DS.W    1                       ; 1 IF UP PRESSED, 0 IF NO PRESSED
 PLRDOWNSPEED DS.W    1                       ; PLAYER DOWN SPEED
@@ -42,6 +44,7 @@ BGSNDINIT   DC.B    0                       ; TO PLAY OR NOT TO PLAY BGSND
 
 UTLRNDIX    DS.B    1                       ; NEXT INDEX TO RANDOM NUMBER
             DS.W    0
+
 
 
 
