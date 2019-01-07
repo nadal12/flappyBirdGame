@@ -15,7 +15,7 @@ SNDINIT
             LEA         .PATHPTR,A0         ; LOAD POINTER TO POINTERS OF PATHS
             MOVEQ       #71,D0              ; LOAD TASK NUMBER
             MOVEQ       #FLAPSND,D1         ; CARGAR EL MENOR NUM.REF. DE SND.
-            MOVEQ       #BGSND,D2         ; CARGAR EL MAYOR NUM.REF. DE SND.
+            MOVEQ       #BGSND,D2           ; CARGAR EL MAYOR NUM.REF. DE SND.
             
 .LOOP       MOVEA.L     (A0)+,A1            ; CARGAR PATH A FICHERO DE SONIDO
             TRAP        #15     
@@ -48,11 +48,11 @@ SNDUPD
         ;Guardar registros
         MOVE.L     D0,-(A7)
         
-        TST.B       (BGSNDINIT)            ; CHECK IF SOUND IS ON
+        TST.B       (BGSNDINIT)             ; CHECK IF SOUND IS ON
         BNE.S       .END
         
         MOVE.B      (SCRCYCCT),D0
-        AND.B       #$3F,D0            ; AFTER 64 CYCLES PLAY BG MUSIC
+        AND.B       #$3F,D0                 ; AFTER 64 CYCLES PLAY BG MUSIC
         BNE.S      .END
         
         MOVE.B      #SOUNDOFF,(BGSNDINIT)   ; MARK BG MUSIC AS ALREADY ON PLAY
@@ -62,6 +62,7 @@ SNDUPD
         MOVE.L     (A7)+,D0
         RTS
             
+
 
 
 
